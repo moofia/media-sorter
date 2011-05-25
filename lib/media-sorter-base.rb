@@ -29,7 +29,10 @@ def log(msg,level=nil)
  level ||= 1
  # this line seems odd to me, not too sure what it is trying to achieve or if its working.
  return if  level > $config["settings"]["log_level"]
+ 
  @script = File.basename($0).split(/\./)[0] 
+ FileUtils.mkdir_p("#{$script_dir}/var/log") if not File.directory? "#{$script_dir}/var/log"
+ 
  logfile = $script_dir + "/var/log/#{@script}.log"
  logfile = $config["settings"]["log_directory"] + "/#{@script}.log" if $config["settings"].has_key? 'log_directory'
  if $config["settings"]["log_file"]
