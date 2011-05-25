@@ -18,7 +18,7 @@ class Episode
     
     @show.gsub!(/\./,' ')    
     @show.gsub!(/\s+$/,'')    
-    $config["rename"]["show"].keys.each {|s| @show.gsub!(/^#{Regexp.escape(s)}$/i,$config["rename"]["show"][s])}    
+    $config_rename["rename"]["show"].keys.each {|s| @show.gsub!(/^#{Regexp.escape(s)}$/i,$config_rename["rename"]["show"][s])}    
     @show.gsub!(/(\s|\.)(\d\d\d\d)$/,' (\2)')
     @show = @show.titlecase
     
