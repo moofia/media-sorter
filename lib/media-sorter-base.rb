@@ -278,13 +278,15 @@ def move_file(f,target)
  end
  
  if File.exists? "#{target}/#{File.basename(f)}"
-   log("warning dst file exists: \'#{File.basename(f)}\'",2) if 2 == $config["settings"]["log_level"]
-   
+   log("warning dst file exists: \'#{File.basename(f)}\'",2) if $config["settings"]["log_level"] > 2
    if stats["src_size"] == stats["dst_size"] and $config["settings"]["prompt_prune_duplicates"] and f != target_file
-
      msg = "#{@script} -> duplicate equal size: \'#{File.basename(f) }\' remove new copy ? [y/n] "
      prompt(f,"delete",msg)
      return 2
+   elsif stats["src_size"] != stats["dst_size"] and f != target_file
+     msg = "duplicate: src \'#{f}\' (#{stats["src_size"]}) -> dst \'#{target_file}\' (#{stats["dst_size"]}) fix manually"
+     #prompt(f,"delete",msg)
+     log msg
    else
      log "warning src and dst equal for '#{File.basename(f)}\' with auto pruning enable, doing nothing"
    end
