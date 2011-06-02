@@ -3,5 +3,5 @@
 .DS_Store
 *.log
 *.swp
-
+/var/tvdb/*
 
