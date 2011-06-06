@@ -2,8 +2,6 @@
 settings:
   source_directory: /media/TERA/sort
   destination_directory: /media/TERA/tv
-  #source_directory: /Users/jacquesa/svnwork/sub/noc/xbmc/media
-  #destination_directory: /Users/jacquesa/svnwork/sub/noc/xbmc/media
 
   #dst_no_hierarchy: true
   # if log_directory not set defaults to install directory log
