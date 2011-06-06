@@ -375,7 +375,7 @@ def find_missing(files)
         @tvdb_episodes[show][season][max].keys.each do |name|
           tmp_date = @tvdb_episodes[show][season][max][name]["first_aired"] if @tvdb_episodes[show][season][max][name].has_key? "first_aired"
           end
-exit
+debug "forced exit, refactor first"
         yyyy, mm, dd = $1, $2, $3 if tmp_date =~ /(\d+)-(\d+)-(\d+)/
         if Time.mktime(yyyy, mm, dd) < Time.now.localtime
           eps[show]["tvdb_find_missing"] = Hash.new unless eps[show]["tvdb_find_missing"].class == Hash
