@@ -32,6 +32,7 @@ tvdb:
   # now defaults to home dir of script
   #cache_directory: /tmp/tvdb
   default: true # always query tvdb
+  tvdb_find_missing: false # enables finding the last episode from tvdb when finding missing shows
   
 # regex patterns of files 3 arguments ($1-$3) should be matched
 # $1 = show

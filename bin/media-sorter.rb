@@ -48,6 +48,7 @@ begin
     ["--tvdb",             Getopt::BOOLEAN],
     ["--tvdb-refresh",     Getopt::BOOLEAN],
     ["--dry",              Getopt::BOOLEAN],
+    ["--find-missing",     Getopt::BOOLEAN],
     ["--dst",              Getopt::OPTIONAL],
     ["--src",              Getopt::OPTIONAL],
     ["--log-level",        Getopt::OPTIONAL]
@@ -85,6 +86,12 @@ e
 # find all files
 log("recursive src") if $opt["recursive"]
 files = find_files($opt["recursive"],src)
+
+# find missing episodes. at the moment this must exist once completed
+if $opt["find-missing"]
+  find_missing(files) 
+  exit
+end
 
 # loop through list of files looking for media, if its a tv episode proceed to 
 # move the file to the correct location, this includes renaming to correct syntax

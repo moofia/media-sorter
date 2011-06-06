@@ -130,6 +130,7 @@ puts <<HELP
   --tvdb-refresh      force a refresh of tvdb content (warning applies globally)
   --dry               dryrun, no files are renamed / removed
   --log-level         log level
+  --find-missing      find missing episodes. only finds missing episodes between min and max
 
   --help
 
@@ -342,4 +343,63 @@ def look_and_mv(episode)
   target = "#{@tvdir}/#{episode.show}/#{season}"  
   target = "#{@tvdir}" if $opt["dst_no_hierarchy"]
   move_file(episode.file,target)
+end
+
+def find_missing(files) 
+
+  eps = {}
+
+  # loop through list of files looking for media
+  files.each do |file|
+    next if not file[/.*\/(.*)\/season.*\/.*\s\[(\d+)x(\d+)\]\s(.*)/i]
+    show = $1
+    season = $2
+    number = $3.to_i.to_s
+    eps[show]                 = {} if eps[show].class.to_s != 'Hash'
+    eps[show][season]         = {} if eps[show][season].class.to_s != 'Hash'
+    eps[show][season][number] = file
+
+    # this is a complete mess!!
+    # tons of bugs, must fix
+    # refactor!
+    
+    if ($config["tvdb"]["tvdb_find_missing"]) and ! eps[show].has_key? "tvdb_find_missing"
+      tvdb_result = tvdb(show)
+      
+      if tvdb_result == false 
+        log("failed to find tvshow \'#{show}\' from tvdb, skipping..")
+      else
+        debug @tvdb_episodes
+        max = @tvdb_episodes[show][season].max[0]
+        tmp_date = "2020-01-01"
+        @tvdb_episodes[show][season][max].keys.each do |name|
+          tmp_date = @tvdb_episodes[show][season][max][name]["first_aired"] if @tvdb_episodes[show][season][max][name].has_key? "first_aired"
+          end
+exit
+        yyyy, mm, dd = $1, $2, $3 if tmp_date =~ /(\d+)-(\d+)-(\d+)/
+        if Time.mktime(yyyy, mm, dd) < Time.now.localtime
+          eps[show]["tvdb_find_missing"] = Hash.new unless eps[show]["tvdb_find_missing"].class == Hash
+          eps[show]["tvdb_find_missing"][season] = Hash.new unless eps[show]["tvdb_find_missing"][season].class == Hash
+          eps[show]["tvdb_find_missing"][season]["max"] = max
+        end
+      end
+    end
+  end
+
+  eps.keys.each do |show|
+    eps[show].keys.each do |season|
+      next if season == "tvdb_find_missing"
+      max = eps[show][season].max[0]
+      if eps[show].has_key? "tvdb_find_missing"
+        max = eps[show]["tvdb"][season]["max"] if eps[show]["tvdb"].has_key? season
+      end
+
+     # max = eps[show]
+      eps[show][season].min[0].upto(max) do |i|
+        # found a missing episode, for now just display something
+        log("missing: #{show} season #{season} -> number #{i}") if not eps[show][season].has_key? i
+        end
+      end
+    end    
+
 end
