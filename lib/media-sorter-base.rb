@@ -349,9 +349,11 @@ def find_missing(files)
 
   eps = {}
 
+  season_pre = "season."
+  season_pre = $config["settings"]["season_dir_prepend"] if $config["settings"].has_key? "season_dir_prepend"
   # loop through list of files looking for media
   files.each do |file|
-    next if not file[/.*\/(.*)\/season.*\/.*\s\[(\d+)x(\d+)\]\s(.*)/i]
+    next if not file[/.*\/(.*)\/#{season_pre}.*\/.*\s\[(\d+)x(\d+)\]\s(.*)/i]
     show = $1
     season = $2
     number = $3.to_i.to_s
