@@ -4,4 +4,4 @@
 *.log
 *.swp
 /var/tvdb/*
-
+/etc/media-sorter.yaml
