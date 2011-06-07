@@ -42,6 +42,7 @@ series:
   media_extentions: avi,mkv,mpg,ogg,mpeg,mp4
   regex:
     - (.*)\s-\s(\d+)x(\d+)\s-\s          # Arrested Development - 1x13 - Beef Consomme.avi
+    - (.*)\s-\ss(\d+)e(\d+)\s-\s         # Inspector Morse - S07E01 - Deadly Slumber.avi
     - (.*)\.s(\d+)e(\d+)\..*             # past.life.s01e03.foo.avi
     - (.*)\.s(\d+)e(\d+)                 # the.next.food.network.star.S06E01.avi
     - (.*)\s\[(\d+)x(\d+)\]\s            # Psych [4x14] Think Tank.avi
