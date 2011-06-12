@@ -405,3 +405,27 @@ debug "forced exit, refactor first"
     end    
 
 end
+
+def get_directories(src)
+  directories = Array.new
+  Find.find(src) do |path|
+    next if path == src
+    next if not File.directory? path
+    directories.push path
+  end
+  directories.reverse
+end
+
+def remove_empty_directories(src)
+  log("cleanining up : #{src}")
+  get_directories(src).each do |dir|
+    if Dir["#{dir}/*"].empty?
+      log("removing empty directory : #{dir}")
+      FileUtils.rmdir(dir,$options)
+    end 
+  end
+  
+  get_directories(src).each do |dir|
+    log("unable to remove, directory not empty: #{dir}") if not Dir["#{dir}/*"].empty?
+  end
+end

@@ -102,6 +102,11 @@ files.each do |file|
   episode.status = look_and_mv episode if episode.is_ep?  
 end
 
+# remove empty directories
+if $config["settings"]["prune_empty_directories"]
+  remove_empty_directories(src)
+end
+
 puts
 
 # see which media files were found but failed to an episode that we expected 
