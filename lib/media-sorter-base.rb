@@ -427,6 +427,8 @@ def remove_empty_directories(src)
   end
   
   get_directories(src).each do |dir|
-    log("unable to remove, directory not empty: #{dir}") if not Dir["#{dir}/*"].empty?
+    if not Dir["#{dir}/*"].empty? and $config["settings"]["log_level"] > 1
+      log("unable to remove, directory not empty: #{dir}") 
+    end
   end
 end
