@@ -121,16 +121,17 @@ def help
 puts <<HELP
   usage: #{@script} --src [src dir] --dst [destination dir] --debug
 
-  --src               source folder
-  --dst               destination folder
-  --dst_no_hierarchy  destination folder hierarchy off
-  --debug             extra log messages for debugging
-  --recursive         recurse directory tree
-  --tvdb              correct filename based on tvdb
-  --tvdb-refresh      force a refresh of tvdb content (warning applies globally)
-  --dry               dryrun, no files are renamed / removed
-  --log-level         log level
-  --find-missing      find missing episodes. only finds missing episodes between min and max
+  --src                       source folder
+  --dst                       destination folder
+  --dst_no_hierarchy          destination folder hierarchy off
+  --debug                     extra log messages for debugging
+  --recursive                 recurse directory tree
+  --tvdb                      correct filename based on tvdb
+  --tvdb-refresh              force a refresh of tvdb content (warning applies globally)
+  --dry                       dryrun, no files are renamed / removed
+  --log-level                 log level
+  --find-missing              find missing episodes. only finds missing episodes between min and max
+  --prune-empty-directories   prune empty directories
 
   --help
 

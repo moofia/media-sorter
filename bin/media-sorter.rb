@@ -41,17 +41,18 @@ require "#{$script_dir}/lib/media-sorter-xbmc-module"
 # options 
 begin
   $opt = Getopt::Long.getopts(
-    ["--debug",            Getopt::BOOLEAN],
-    ["--help",             Getopt::BOOLEAN],
-    ["--dst_no_hierarchy", Getopt::BOOLEAN],
-    ["--recursive",        Getopt::BOOLEAN],
-    ["--tvdb",             Getopt::BOOLEAN],
-    ["--tvdb-refresh",     Getopt::BOOLEAN],
-    ["--dry",              Getopt::BOOLEAN],
-    ["--find-missing",     Getopt::BOOLEAN],
-    ["--dst",              Getopt::OPTIONAL],
-    ["--src",              Getopt::OPTIONAL],
-    ["--log-level",        Getopt::OPTIONAL]
+    ["--debug",                       Getopt::BOOLEAN],
+    ["--help",                        Getopt::BOOLEAN],
+    ["--dst_no_hierarchy",            Getopt::BOOLEAN],
+    ["--recursive",                   Getopt::BOOLEAN],
+    ["--tvdb",                        Getopt::BOOLEAN],
+    ["--tvdb-refresh",                Getopt::BOOLEAN],
+    ["--dry",                         Getopt::BOOLEAN],
+    ["--find-missing",                Getopt::BOOLEAN],
+    ["--prune-empty-directories",     Getopt::BOOLEAN],
+    ["--dst",                         Getopt::OPTIONAL],
+    ["--src",                         Getopt::OPTIONAL],
+    ["--log-level",                   Getopt::OPTIONAL]
     )
 rescue Getopt::Long::Error => e
   puts "#{@script} -> error #{e.message}"  
@@ -82,7 +83,13 @@ log("dry run enabled, no files will be renamed or moved") if $opt["dry"]
 
 # remove trailing / from bash_completion
 src = src.gsub(/\/$/,'')
-e
+
+# prune empty directories and exit
+if $opt["prune-empty-directories"]
+  remove_empty_directories(src)
+  exit
+end
+
 # find all files
 log("recursive src") if $opt["recursive"]
 files = find_files($opt["recursive"],src)
