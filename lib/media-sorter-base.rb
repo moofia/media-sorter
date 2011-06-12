@@ -75,18 +75,6 @@ def tv_file(file)
   return false, name, season, episode
 end
 
-# clean up , not really being used at the moment.
-# idea is to remove previous directories that are empty once sorting is completed.
-def clean_up(sort)
-  log("cleanining up : #{sort}")
-  Find.find(sort) do |path|
-    next if not File.directory? path
-    next if not Dir["#{path}/.*"].empty?
-    #FileUtils.rmdir(path,$options)
-    FileUtils.rmdir(path)
-  end
-end
-
 # returns an array of tv files
 def find_files(recusive,sort)
   ext_list = $config["series"]["media_extentions"].split(/,/).map.join("|")
@@ -407,6 +395,20 @@ debug "forced exit, refactor first"
 
 end
 
+# when trying to remove directories there are varies odd dot files that can be 
+# removed
+def remove_arb_dot_files(src)
+  dot_files = Array.new
+  dot_files << "DS_Store"
+  dot_files << "_.DS_Store"
+  dot_files << "com.apple.timemachine.supported"
+  
+  dot_files.each do |file|
+    dot_file_remove = "#{src}/.#{file}"
+    FileUtils.rm(dot_file_remove,$options) if File.exists? dot_file_remove
+  end
+end
+
 def get_directories(src)
   directories = Array.new
   Find.find(src) do |path|
@@ -418,10 +420,15 @@ def get_directories(src)
 end
 
 def remove_empty_directories(src)
+  puts
   log("cleanining up : #{src}")
   get_directories(src).each do |dir|
-    if Dir["#{dir}/*"].empty?
+    tmp_dir = dir.gsub(/\[/,'\[')
+    tmp_dir.gsub!(/\]/,'\]')
+  
+    if Dir["#{tmp_dir}/*"].empty?
       log("removing empty directory : #{dir}")
+      remove_arb_dot_files(dir)
       FileUtils.rmdir(dir,$options)
     end 
   end
