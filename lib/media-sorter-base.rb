@@ -420,16 +420,18 @@ def get_directories(src)
 end
 
 def remove_empty_directories(src)
-  puts
-  log("cleanining up : #{src}")
+  found = false
   get_directories(src).each do |dir|
     tmp_dir = dir.gsub(/\[/,'\[')
     tmp_dir.gsub!(/\]/,'\]')
   
     if Dir["#{tmp_dir}/*"].empty?
+      log("cleanining up : #{src}") if not found
+      
       log("removing empty directory : #{dir}")
       remove_arb_dot_files(dir)
       FileUtils.rmdir(dir,$options)
+      found = true
     end 
   end
   
@@ -438,4 +440,6 @@ def remove_empty_directories(src)
       log("unable to remove, directory not empty: #{dir}") 
     end
   end
+  
+  log("no empty directories were found") if not found and $opt["prune-empty-directories"]
 end
