@@ -278,7 +278,7 @@ def move_file(f,target)
      #prompt(f,"delete",msg)
      log msg
    else
-     log "warning src and dst equal for '#{File.basename(f)}\' with auto pruning enable, doing nothing"
+     log "warning src and dst equal for '#{File.basename(f)}\' with auto pruning enabled we choose to do nothing"
    end
    
    if $config["settings"]["log_level"] > 2
