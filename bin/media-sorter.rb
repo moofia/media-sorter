@@ -72,6 +72,7 @@ $options       = {:verbose=> true}
 $options       = {:noop=>true,:verbose=> true} if $opt["dry"]
 $options       = $options
 @tvdb_episodes = {}
+$cache_state   = false
 
 $opt["tvdb"]   = $config["tvdb"]["default"] if not $opt["tvdb"]
 $opt["dst_no_hierarchy"]  = $config["settings"]["dst_no_hierarchy"] if $config["settings"]["dst_no_hierarchy"]
@@ -100,6 +101,7 @@ if $opt["find-missing"]
   exit
 end
 
+puts
 # loop through list of files looking for media, if its a tv episode proceed to 
 # move the file to the correct location, this includes renaming to correct syntax
 # if desired
@@ -109,6 +111,7 @@ files.each do |file|
   episode.status = look_and_mv episode if episode.is_ep?  
 end
 
+puts
 # remove empty directories
 if $config["settings"]["prune_empty_directories"]
   remove_empty_directories(src)

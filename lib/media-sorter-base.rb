@@ -251,20 +251,27 @@ end
 
 # moves the file to target location and creates directories if needed
 def move_file(f,target)
+ log_new("move_file -> #{File.basename(f) }")
+  
+ #if not File.exists? f 
+ #   log "error: source file does not exist! \"#{f}\""
+ #   exit 2
+ #end
  target_file = target + "/" + File.basename(f)   
  stats = {}
  stats["src_size"] = ( not File.size?(f).nil?) ? File.size?(f) : 0
  stats["dst_size"] = ( not File.size?(target_file).nil? ) ? File.size?(target_file) : 0
- 
- if stats["src_size"] == 0 
-   msg = "#{@script} -> src file zero bytes: \'#{File.basename(f) }\' remove new file ? [y/n] "
-   prompt(f,"delete",msg)
-   return 2
- end
- if stats["src_size"] < 100000000 and $config["settings"]["prune_small"]
-   msg = "#{@script} -> src file less than 100M: \'#{File.basename(f) }\' remove new file ? [y/n] "
-   prompt(f,"delete", msg)
-   return 2
+ if File.exists? f 
+   if stats["src_size"] == 0 
+     msg = "#{@script} -> src file zero bytes: \'#{File.basename(f) }\' remove new file ? [y/n] "
+     prompt(f,"delete",msg)
+     return 2
+   end
+   if stats["src_size"] < 100000000 and $config["settings"]["prune_small"]
+     msg = "#{@script} -> src file less than 100M: \'#{File.basename(f) }\' remove new file ? [y/n] "
+     prompt(f,"delete", msg)
+     return 2
+   end
  end
  
  if File.exists? "#{target}/#{File.basename(f)}"
@@ -291,10 +298,10 @@ def move_file(f,target)
    end
    return 2
  end
+ 
  # if the directory does not exist it is created
  FileUtils.mkdir_p(target,$options) if not File.directory? target
  FileUtils.mv(f,target,$options) if ( (File.dirname f) != target.gsub(/\/$/,'')) 
- log_new("#{File.basename(f) }")
  1
 end
 
@@ -313,7 +320,7 @@ def look_and_mv(episode)
   re_cache = episode.fix_via_tvdb @tvdb_episodes if $opt["tvdb"] and @tvdb_episodes.has_key?(episode.show)
   
   # we do one round of re-caching only if the episode name is not found
-  if not re_cache 
+  if  re_cache
     log("re-caching from tvdb")
     $opt["tvdb-refresh"] = true
     @tvdb_episodes = {}
@@ -331,7 +338,12 @@ def look_and_mv(episode)
   season = "specials" if episode.season == "0"
   target = "#{@tvdir}/#{episode.show}/#{season}"  
   target = "#{@tvdir}" if $opt["dst_no_hierarchy"]
-  move_file(episode.file,target)
+
+  #ap episode.file
+  #ap episode.original_file
+  #debug episode
+  
+  move_file(episode.original_file,target)
 end
 
 def find_missing(files) 

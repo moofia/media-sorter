@@ -2,7 +2,7 @@
 
 # Episode class
 class Episode
-  attr_reader :file, :number, :name, :season, :show
+  attr_reader :file, :number, :name, :season, :show, :original_file
   attr_accessor :file
   attr_writer :show, :status
   
@@ -40,11 +40,12 @@ class Episode
   
   # renames the file name based on tvdb
   def fix_via_tvdb(episodes)
-    success = false
+    success = true
     log("attempting to fix name based on tvdb") if $opt["debug"]
     @name = episodes[@show][@season][@number] if episodes[@show][@season]
     ap episodes[@show] if $config["settings"]["log_level"] > 3 
     if not @name.nil?
+      success = false
       @name = CGI.unescapeHTML(@name)
       @name.gsub!(/\//,'-')
       @name.gsub!(/\?/,'')
@@ -54,10 +55,15 @@ class Episode
       @number.gsub!(/^/,'0') if @number.to_i < 10 and @number.to_i != 0
       @name = "#{@show} [#{@season}x#{@number}] #{@name}" 
       @name.gsub!(/\s\s/,' ') 
-      orig = @file
+      orig = @original_file
       @file = File.dirname(orig) + "/" + @name + File.extname(File.basename(orig))
-      FileUtils.mv(orig,@file,$options) if orig.downcase != @file.downcase
-      success = true
+      
+      #FileUtils.mv(orig,@file,$options) if orig.downcase != @file.downcase
+      if orig != @file
+        log "fix_via_tvdb: #{orig} to #{@file}"
+        FileUtils.mv(orig,@file,$options) 
+        @original_file = @file
+      end
     end
     success
   end
