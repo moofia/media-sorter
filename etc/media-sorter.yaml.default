@@ -19,7 +19,7 @@ settings:
   # auto pruning of duplicates, new src is always removed.
   # currently equal size and < 100M and zero bytes
   auto_prune_duplicates: true
-  prune_small: fasle
+  prune_small: true
   prune_empty_directories: true
   
   # prepend directory for each season, number is added in automatically
