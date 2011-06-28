@@ -59,7 +59,11 @@ class Episode
       @file = File.dirname(orig) + "/" + @name + File.extname(File.basename(orig))
       
       #FileUtils.mv(orig,@file,$options) if orig.downcase != @file.downcase
-      if orig != @file
+      if orig != @file and $config["settings"]["fs_case_sensitive"] == true
+        log "fix_via_tvdb: #{orig} to #{@file}"
+        FileUtils.mv(orig,@file,$options) 
+        @original_file = @file
+      elsif orig.downcase != @file.downcase
         log "fix_via_tvdb: #{orig} to #{@file}"
         FileUtils.mv(orig,@file,$options) 
         @original_file = @file
