@@ -56,6 +56,11 @@ class Episode
       @number.gsub!(/^/,'0') if @number.to_i < 10 and @number.to_i != 0
       @series_name = episodes[@show]["series name"] if @show != episodes[@show]["series name"]
 
+      @series_name.gsub!(/\//,'-')
+      @series_name.gsub!(/\?/,'')
+      @series_name.gsub!(/\:/,' ')
+      @series_name.gsub!(/\s+$/,'')
+      
       @name = "#{@series_name} [#{@season}x#{@number}] #{@name}" 
       @name.gsub!(/\s\s/,' ') 
       orig = @original_file
