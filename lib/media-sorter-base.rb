@@ -238,11 +238,18 @@ def get_show_episodes(show_id,show)
     end
   end
 
+  series_name = show
+  
+  doc.find('//Data/Series').each do |item|
+    series_name  = item.find('SeriesName')[0].child.to_s
+  end
+
   doc.find('//Data/Episode').each do |item| 
    season  = item.find('SeasonNumber')[0].child.to_s
    episode = item.find('EpisodeNumber')[0].child.to_s
    name    = item.find('EpisodeName')[0].child.to_s
    episodes[show] = Hash.new unless episodes[show].class == Hash
+   episodes[show]["series name"] = series_name
    episodes[show][season] = Hash.new unless episodes[show][season].class == Hash
    episodes[show][season][episode] = name
   end
@@ -336,7 +343,7 @@ def look_and_mv(episode)
   season_pre = $config["settings"]["season_dir_prepend"] if $config["settings"].has_key? "season_dir_prepend"
   season = "#{season_pre}#{episode.season}"
   season = "specials" if episode.season == "0"
-  target = "#{@tvdir}/#{episode.show}/#{season}"  
+  target = "#{@tvdir}/#{episode.series_name}/#{season}"  
   target = "#{@tvdir}" if $opt["dst_no_hierarchy"]
 
   #ap episode.file
