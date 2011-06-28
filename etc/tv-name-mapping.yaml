@@ -7,6 +7,22 @@
 
 rename:
   show:
+      "That Mitchell & Webb Look": "That Mitchell and Webb Look"
+      The Killing: "The Killing (2011)"
+      "Spartacus - Blood and Sand": "Spartacus: Blood and Sand"
+      "frontline (us)": "frontline (pbs)"
+      "Spartacus - Gods of the Arena": "Spartacus: Gods of the Arena"
+      "Sanctuary US": "Sanctuary"
+      "Star Wars the Clone Wars (2008)": "Star Wars - The Clone Wars"
+      "Star Wars - The Clone Wars (2008)": "Star Wars - The Clone Wars"
+      "Star Wars the Clone Wars": "Star Wars - The Clone Wars"
+      Sea_patrol: Sea patrol
+      "Sanctuary (US)": Sanctuary
+      "Rush (2008)": Rush
+      "Life After People - the Series": Life After People
+      Kenny vs  Spenny: "Kenny vs. Spenny"
+      Eastbound and Down: "Eastbound & Down"
+      Californation: Californication
       ben 10 alien force: "ben 10: alien force"
       Ben 10 Ultimate Alien: "Ben 10: Ultimate Alien"
       aaf-tosh 0: tosh.0
@@ -57,6 +73,8 @@ rename:
       "MasterChef US": "Masterchef (US)"
       "The Colony US": The Colony
       "The Colony (US)": The Colony
+      "Penn & Teller - Fool Us": "Penn & Teller: Fool Us"
+      "Penn and Teller - Fool Us": "Penn & Teller: Fool Us"
       "Penn and Teller Bullshit": "Penn & Teller: Bullshit!"
       "Penn & Teller - Bullshit!": "Penn & Teller: Bullshit!"
       Rizzoli and Isles: Rizzoli & Isles
@@ -76,7 +94,7 @@ rename:
       'Survivor (US)': Survivor
       'Survivor Nicaragua': Survivor
       'Survivor US': Survivor
-      'Survivor - Heroes vs Villains': Survivor
+      'Survivor - Heroes vs  Villains': Survivor
       crash & burn: Cra$h & Burn
       greys anatomy: "Grey's Anatomy"
       csi: crime scene investigation
