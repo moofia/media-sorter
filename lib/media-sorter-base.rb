@@ -200,12 +200,13 @@ def get_show_id(show)
     pre_regex = '^'
     
     # having a problem matching some shows due to the colon issue above not being able to be used in a filename on fat32
-    pre_regex = '' if series_name =~ /:/
+    # which has not been commented out as this is not working.
+    #pre_regex = '' if series_name =~ /:/
     # file names can not contain ':' so we need to remove them from possible show names
     series_name.gsub!(/:/,'')
     find.gsub!(/:/,'')
 
-    if series_name  =~ /#{pre_regex}#{find}$/i     
+    if series_name  =~ /#{pre_regex}#{find}$/i  
        show_id = item.find('id')[0].child.to_s
     end
   end
