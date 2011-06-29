@@ -164,9 +164,13 @@ end
 
 # query thetvdb.com to get the show id.
 def get_show_id(show)
+  # so confused why this is here suddenly!
+  show.gsub!(/:/,'')
+  
   show_id = ""
   cache_dir = $script_dir + "/var/tvdb/" + show
   cache_dir = $config["tvdb"]["cache_directory"] + "/" + show if $config["tvdb"].has_key? "cache_directory"
+
   
   FileUtils.mkdir_p(cache_dir) if not File.directory? cache_dir
   cache = cache_dir + "/" + show + ".xml"
@@ -219,6 +223,7 @@ def get_show_episodes(show_id,show)
   cache_dir = $script_dir + "/var/tvdb/" + show
   cache_dir = $config["tvdb"]["cache_directory"] + "/" + show if $config["tvdb"].has_key? "cache_directory"
   cache = cache_dir + "/" + show_id + ".xml"
+  
   if File.exists? cache and not $opt["tvdb-refresh"]
     log("tvdb retrieving show episodes via cache: #{show} (#{show_id})")
     parser = XML::Parser.file cache
@@ -231,8 +236,10 @@ def get_show_episodes(show_id,show)
     else
       xml_data = xml_get(url)      
     end
+    
     parser = XML::Parser.string xml_data
     doc = parser.parse
+    
     File.open(cache, 'w') do |file|
       xml_data.each {|x| file.puts x}
     end
