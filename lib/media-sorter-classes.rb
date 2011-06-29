@@ -19,6 +19,7 @@ class Episode
     @show.gsub!(/\./,' ')    
     @show.gsub!(/\s+$/,'')    
     $config_rename["rename"]["show"].keys.each {|s| @show.gsub!(/^#{Regexp.escape(s)}$/i,$config_rename["rename"]["show"][s])}    
+
     @show.gsub!(/(\s|\.)(\d\d\d\d)$/,' (\2)')
     @show = @show.downcase.titlecase
     @series_name = @show
@@ -54,14 +55,14 @@ class Episode
       @name.gsub!(/\s+$/,'')    
       @show.gsub!(/\:/,'')
       @number.gsub!(/^/,'0') if @number.to_i < 10 and @number.to_i != 0
-      @series_name = episodes[@show]["series name"] if @show != episodes[@show]["series name"]
+      #@series_name = episodes[@show]["series name"] if @show != episodes[@show]["series name"]
 
-      @series_name.gsub!(/\//,'-')
-      @series_name.gsub!(/\?/,'')
-      @series_name.gsub!(/\:/,' ')
-      @series_name.gsub!(/\s+$/,'')
+      #@series_name.gsub!(/\//,'-')
+      #@series_name.gsub!(/\?/,'')
+      #@series_name.gsub!(/\:/,' ')
+      #@series_name.gsub!(/\s+$/,'')
       
-      @name = "#{@series_name} [#{@season}x#{@number}] #{@name}" 
+      @name = "#{@show} [#{@season}x#{@number}] #{@name}" 
       @name.gsub!(/\s\s/,' ') 
       orig = @original_file
       @file = File.dirname(orig) + "/" + @name + File.extname(File.basename(orig))

@@ -200,7 +200,8 @@ def get_show_id(show)
     pre_regex = '^'
     
     # having a problem matching some shows due to the colon issue above not being able to be used in a filename on fat32
-    pre_regex = '' if series_name =~ /:/
+    # this si being commented out as its not working
+    #pre_regex = '' if series_name =~ /:/
     # file names can not contain ':' so we need to remove them from possible show names
     series_name.gsub!(/:/,'')
     find.gsub!(/:/,'')
@@ -245,18 +246,18 @@ def get_show_episodes(show_id,show)
     end
   end
 
-  series_name = show
+  #series_name = show
   
-  doc.find('//Data/Series').each do |item|
-    series_name  = item.find('SeriesName')[0].child.to_s
-  end
+  #doc.find('//Data/Series').each do |item|
+  #  series_name  = item.find('SeriesName')[0].child.to_s
+  #end
 
   doc.find('//Data/Episode').each do |item| 
    season  = item.find('SeasonNumber')[0].child.to_s
    episode = item.find('EpisodeNumber')[0].child.to_s
    name    = item.find('EpisodeName')[0].child.to_s
    episodes[show] = Hash.new unless episodes[show].class == Hash
-   episodes[show]["series name"] = series_name
+   #episodes[show]["series name"] = series_name
    episodes[show][season] = Hash.new unless episodes[show][season].class == Hash
    episodes[show][season][episode] = name
   end
@@ -332,7 +333,7 @@ def look_and_mv(episode)
     return false
   end
   re_cache = episode.fix_via_tvdb @tvdb_episodes if $opt["tvdb"] and @tvdb_episodes.has_key?(episode.show)
-  
+
   # we do one round of re-caching only if the episode name is not found
   if  re_cache
     log("re-caching from tvdb")
@@ -350,7 +351,7 @@ def look_and_mv(episode)
   season_pre = $config["settings"]["season_dir_prepend"] if $config["settings"].has_key? "season_dir_prepend"
   season = "#{season_pre}#{episode.season}"
   season = "specials" if episode.season == "0"
-  target = "#{@tvdir}/#{episode.series_name}/#{season}"  
+  target = "#{@tvdir}/#{episode.show}/#{season}"  
   target = "#{@tvdir}" if $opt["dst_no_hierarchy"]
 
   #ap episode.file
