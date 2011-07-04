@@ -7,6 +7,9 @@
 
 rename:
   show:
+      "Wilfred US": "Wilfred (US)"
+      "Masterpiece Theater Bleak House": House
+      "Hani Hani Operation Sanctuary": Sanctuary
       "That Mitchell & Webb Look": "That Mitchell and Webb Look"
       The Killing: "The Killing (2011)"
       "Spartacus - Blood and Sand": "Spartacus: Blood and Sand"
@@ -29,6 +32,7 @@ rename:
       aaf-tosh: tosh.0
       tosh: tosh.0
       XIII - the Series: "XIII (2011)"
+      Franklink and Bash: "Franklin & Bash"
       Franklin and Bash: "Franklin & Bash"
       Teen Wolf: "Teen Wolf (2011)"
       Richard Hammond Engineering Connections: "Richard Hammond's Engineering Connections"
