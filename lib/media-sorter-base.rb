@@ -434,6 +434,15 @@ def remove_arb_dot_files(src)
     dot_file_remove = "#{src}/.#{file}"
     FileUtils.rm(dot_file_remove,$options) if File.exists? dot_file_remove
   end
+
+  # handle removing of temp macos ._ files
+  Find.find(src) do |path|
+    next if File.basename(path) !~ /^\._/
+    dot_file_remove = "#{src}/#{File.basename(path)}"
+    puts dot_file_remove
+    FileUtils.rm(dot_file_remove,$options) if File.exists? dot_file_remove
+  end
+
 end
 
 def get_directories(src)
