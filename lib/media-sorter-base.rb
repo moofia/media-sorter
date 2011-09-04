@@ -498,7 +498,7 @@ def is_on_secondary_storage(path,src)
   src.each do |s|
     show = s.gsub(/#{path}/,'')
     show = File.dirname(show).split(/\//).first
-    shows[show] = true
+    shows[show] = true if show =~ /\w/
   end
   shows
 end
