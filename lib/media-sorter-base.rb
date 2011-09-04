@@ -278,7 +278,7 @@ def move_file(f,target)
  # the target.
  if @tvdir2
    show = target.gsub(/\/\//,'/').gsub(/#{@tvdir}/,'')
-   show = File.dirname(show).split(/\//).first
+   show = File.dirname(show).split(/\//)[1]
    if @is_on_secondary_storage.has_key? show
      target.gsub!(/#{@tvdir}/,@tvdir2)
    end
@@ -497,7 +497,7 @@ def is_on_secondary_storage(path,src)
   shows = {}
   src.each do |s|
     show = s.gsub(/#{path}/,'')
-    show = File.dirname(show).split(/\//).first
+    show = File.dirname(show).split(/\//)[1]
     shows[show] = true if show =~ /\w/
   end
   shows
