@@ -3,6 +3,9 @@ settings:
   source_directory: /media/TERA/sort
   destination_directory: /media/TERA/tv
 
+  # secondary storage directory, will override destination_directory if show exists
+  #destination_directory2: /media/TERA/tv
+
   #dst_no_hierarchy: true
   # if log_directory not set defaults to install directory log
   #log_directory: /tmp
