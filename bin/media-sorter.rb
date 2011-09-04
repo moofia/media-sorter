@@ -51,6 +51,7 @@ begin
     ["--find-missing",                Getopt::BOOLEAN],
     ["--prune-empty-directories",     Getopt::BOOLEAN],
     ["--dst",                         Getopt::OPTIONAL],
+    ["--dst2",                        Getopt::OPTIONAL],
     ["--src",                         Getopt::OPTIONAL],
     ["--log-level",                   Getopt::OPTIONAL]
     )
@@ -66,8 +67,10 @@ $config        = YAML::load(File.read("#{$script_dir}/etc/media-sorter.yaml"))
 $config_rename = YAML::load(File.read("#{$script_dir}/etc/tv-name-mapping.yaml"))
 src            = $config["settings"]["source_directory"]
 @tvdir         = $config["settings"]["destination_directory"]
+@tvdir2        = $config["settings"]["destination_directory2"]
 src            = $opt["src"] if $opt["src"]
 @tvdir         = $opt["dst"] if $opt["dst"]
+@tvdir2        = $opt["dst2"] if $opt["dst2"]
 $options       = {:verbose=> true} 
 $options       = {:noop=>true,:verbose=> true} if $opt["dry"]
 $options       = $options
@@ -95,6 +98,11 @@ end
 log("recursive src") if $opt["recursive"]
 files = find_files($opt["recursive"],src)
 
+if @tvdir2
+  files_secondary = find_files(true,@tvdir2)
+  @is_on_secondary_storage = is_on_secondary_storage @tvdir2,files_secondary
+end
+
 # find missing episodes. at the moment this must exist once completed
 if $opt["find-missing"]
   find_missing(files) 
@@ -112,8 +120,8 @@ files.each do |file|
 end
 
 puts
-# remove empty directories
-if $config["settings"]["prune_empty_directories"]
+# remove empty directories, only in recursive mode
+if $config["settings"]["prune_empty_directories"] and $opt["recursive"]
   remove_empty_directories(src)
 end
 

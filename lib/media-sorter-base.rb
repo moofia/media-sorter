@@ -111,6 +111,7 @@ puts <<HELP
 
   --src                       source folder
   --dst                       destination folder
+  --dst2                      secondary destination folder which overrides primary
   --dst_no_hierarchy          destination folder hierarchy off
   --debug                     extra log messages for debugging
   --recursive                 recurse directory tree
@@ -272,6 +273,17 @@ def move_file(f,target)
  #   log "error: source file does not exist! \"#{f}\""
  #   exit 2
  #end
+ 
+ # if the show is stored on the secondary storage device swap out the primary for the secondary in 
+ # the target.
+ if @tvdir2
+   show = target.gsub(/\/\//,'/').gsub(/#{@tvdir}/,'')
+   show = File.dirname(show).split(/\//).first
+   if @is_on_secondary_storage.has_key? show
+     target.gsub!(/#{@tvdir}/,@tvdir2)
+   end
+ end
+ 
  target_file = target + "/" + File.basename(f)   
  stats = {}
  stats["src_size"] = ( not File.size?(f).nil?) ? File.size?(f) : 0
@@ -478,4 +490,15 @@ def remove_empty_directories(src)
   end
   
   log("no empty directories were found") if not found and $opt["prune-empty-directories"]
+end
+
+# list of shows stored on secondary storage device
+def is_on_secondary_storage(path,src)
+  shows = {}
+  src.each do |s|
+    show = s.gsub(/#{path}/,'')
+    show = File.dirname(show).split(/\//).first
+    shows[show] = true
+  end
+  shows
 end
