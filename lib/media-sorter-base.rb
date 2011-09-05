@@ -338,6 +338,7 @@ def tvdb(show)
   show_id = get_show_id(show)
   @tvdb_episodes = get_show_episodes(show_id,show) if show_id     
   return false if show_id == false
+  true
 end
 
 # call first to look and decide on renaming
@@ -350,7 +351,7 @@ def look_and_mv(episode)
   re_cache = episode.fix_via_tvdb @tvdb_episodes if $opt["tvdb"] and @tvdb_episodes.has_key?(episode.show)
 
   # we do one round of re-caching only if the episode name is not found
-  if  re_cache
+  if not re_cache
     log("re-caching from tvdb")
     $opt["tvdb-refresh"] = true
     @tvdb_episodes = {}
