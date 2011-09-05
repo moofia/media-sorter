@@ -69,6 +69,7 @@ def tv_file(file)
       name    = $1 if $1
       season  = $2 if $2
       episode = $3 if $3
+      episode = "#{$3}x#{$4}" if $3 and $4
       return true, name, season, episode
     end
   end
@@ -339,6 +340,7 @@ def tvdb(show)
   return false if show_id == false
 end
 
+# call first to look and decide on renaming
 def look_and_mv(episode)
   tvdb_result = tvdb(episode.show) if ($opt["tvdb"]) && (! @tvdb_episodes.has_key?(episode.show))
   if tvdb_result == false
