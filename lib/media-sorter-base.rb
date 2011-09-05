@@ -149,7 +149,6 @@ def xml_get_via_proxy(url)
   html
 end
 
-
 # returns a xml of the url to get.
 def xml_get(url)
   log("http get : #{url}") if $opt["debug"]
@@ -195,7 +194,8 @@ def get_show_id(show)
   end
   doc.find('//Data/Series').each do |item|
     find = show
-    find = Regexp.escape(show) if show =~ /\'|\(|\&/
+    find = Regexp.escape(show) if show =~ /\'|\(|\&|\*/
+    
     series_name = item.find('SeriesName')[0].child.to_s
     series_name = CGI.unescapeHTML(series_name)
     pre_regex = '^'
