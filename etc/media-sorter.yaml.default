@@ -2,9 +2,7 @@
 settings:
   source_directory: /media/TERA/sort
   destination_directory: /media/TERA/tv
-
-  # secondary storage directory, will override destination_directory if show exists
-  #destination_directory2: /media/TERA/tv
+  destination_directory2: /media/TERA2/tv
 
   #dst_no_hierarchy: true
   # if log_directory not set defaults to install directory log
@@ -22,7 +20,7 @@ settings:
   # auto pruning of duplicates, new src is always removed.
   # currently equal size and < 100M and zero bytes
   auto_prune_duplicates: true
-  prune_small: fasle
+  prune_small: true
   prune_empty_directories: true
   
   # prepend directory for each season, number is added in automatically
@@ -30,9 +28,6 @@ settings:
   #season_dir_prepend: "Season "
   season_dir_prepend: "season."
   
-  # file system is case sensitive or not
-  fs_case_sensitive: false
-    
 tvdb:
   api_key: 31384A8E0F418F3B
   mirror: http://thetvdb.com # should be changed to use the api prefered method of finding the correct mirror
@@ -48,19 +43,17 @@ tvdb:
 series:
   media_extentions: avi,mkv,mpg,ogg,mpeg,mp4
   regex:
+    - (.*)\s-\s(\d)(\d+)\s-\s            # Fawlty Towers - 101 - A Touch of Class.avi
     - (.*)\s-\s(\d+)x(\d+)\s-\s          # Arrested Development - 1x13 - Beef Consomme.avi
     - (.*)\s-\ss(\d+)e(\d+)\s-\s         # Inspector Morse - S07E01 - Deadly Slumber.avi
     - (.*)\.s(\d+)e(\d+)\..*             # past.life.s01e03.foo.avi
     - (.*)\.s(\d+)e(\d+)                 # the.next.food.network.star.S06E01.avi
-    - (.*)\ss(\d+)e(\d+)                 # Bullrun S02E03.avi
     - (.*)\s\[(\d+)x(\d+)\]\s            # Psych [4x14] Think Tank.avi
     - (.*)\s\[(\d+)x(\d+)\]              # Psych [4x14].avi
 #    - (.*)\s\[(\d+)x(\d+)\.\d+x\d+\]\s   # The Office (US) [6x16.6x17] The Delivery (part 1 & part 2).avi
     - (.*)\ss(\d+)e(\d)+\s               # Reno 911! S01E01 Pilot.avi
     - (.*)\.(s+\d+)e(\d+)-e\d+\..*       # Friends.S10E17-E18.The.One.With.All.The.Other.Ones.avi
     - (.*)\.(\d)(\d\d)\..*               # raising.hope.114.avi
-    - (.*)\.(\d\d)(\d\d)\..*             # jag.1114.avi
-    - (.*)\.(\d+)x(\d+)\.                # outcasts.1x03.foo.avi
     
 http_rpc:
   update_library: false
