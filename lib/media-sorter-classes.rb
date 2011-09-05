@@ -16,12 +16,7 @@ class Episode
     @season.gsub!(/^0/,'') if @season != "0"    
     @number.gsub!(/^0/,'') if @number != "0"
     
-    @show.gsub!(/\./,' ')    
-    @show.gsub!(/\s+$/,'')    
-    $config_rename["rename"]["show"].keys.each {|s| @show.gsub!(/^#{Regexp.escape(s)}$/i,$config_rename["rename"]["show"][s])}    
-
-    @show.gsub!(/(\s|\.)(\d\d\d\d)$/,' (\2)')
-    @show = @show.downcase.titlecase
+    show_name_rename
     @series_name = @show
     
     #@number.gsub!(/^/,'0') if @number.to_i < 10 and @number.to_i != 0
@@ -86,4 +81,12 @@ class Episode
     ObjectSpace.each_object(Episode)
   end
   
+  :private
+  def show_name_rename
+    @show.gsub!(/\./,' ')    
+    @show.gsub!(/\s+$/,'')    
+    $config_rename["rename"]["show"].keys.each {|s| @show.gsub!(/^#{Regexp.escape(s)}$/i,$config_rename["rename"]["show"][s])}    
+    @show.gsub!(/(\s|\.)(\d\d\d\d)$/,' (\2)')
+    @show = @show.downcase.titlecase
+  end
 end
