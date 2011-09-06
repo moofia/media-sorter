@@ -167,10 +167,11 @@ end
 def get_show_id(show)
   # so confused why this is here suddenly!
   show.gsub!(/:/,'')
+  local_file = show.gsub(/\*/,'_')
   
   show_id = ""
-  cache_dir = $script_dir + "/var/tvdb/" + show
-  cache_dir = $config["tvdb"]["cache_directory"] + "/" + show if $config["tvdb"].has_key? "cache_directory"
+  cache_dir = $script_dir + "/var/tvdb/" + local_file
+  cache_dir = $config["tvdb"]["cache_directory"] + "/" + local_file if $config["tvdb"].has_key? "cache_directory"
 
   
   FileUtils.mkdir_p(cache_dir) if not File.directory? cache_dir
@@ -223,8 +224,9 @@ end
 # the time stamps to know when to fetch new data.
 def get_show_episodes(show_id,show)
   episodes = {}
-  cache_dir = $script_dir + "/var/tvdb/" + show
-  cache_dir = $config["tvdb"]["cache_directory"] + "/" + show if $config["tvdb"].has_key? "cache_directory"
+  local_file = show.gsub(/\*/,'_')
+  cache_dir = $script_dir + "/var/tvdb/" + local_file
+  cache_dir = $config["tvdb"]["cache_directory"] + "/" + local_file if $config["tvdb"].has_key? "cache_directory"
   cache = cache_dir + "/" + show_id + ".xml"
   
   if File.exists? cache and not $opt["tvdb-refresh"]
@@ -351,7 +353,7 @@ def look_and_mv(episode)
   re_cache = episode.fix_via_tvdb @tvdb_episodes if $opt["tvdb"] and @tvdb_episodes.has_key?(episode.show)
 
   # we do one round of re-caching only if the episode name is not found
-  if not re_cache
+  if re_cache
     log("re-caching from tvdb")
     $opt["tvdb-refresh"] = true
     @tvdb_episodes = {}
@@ -367,13 +369,8 @@ def look_and_mv(episode)
   season_pre = $config["settings"]["season_dir_prepend"] if $config["settings"].has_key? "season_dir_prepend"
   season = "#{season_pre}#{episode.season}"
   season = "specials" if episode.season == "0"
-  target = "#{@tvdir}/#{episode.show}/#{season}"  
+  target = "#{@tvdir}/#{episode.show_on_fs}/#{season}"  
   target = "#{@tvdir}" if $opt["dst_no_hierarchy"]
-
-  #ap episode.file
-  #ap episode.original_file
-  #debug episode
-  
   move_file(episode.original_file,target)
 end
 

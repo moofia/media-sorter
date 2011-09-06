@@ -2,7 +2,7 @@
 
 # Episode class
 class Episode
-  attr_reader :file, :number, :name, :season, :show, :original_file, :series_name
+  attr_reader :file, :number, :name, :season, :show, :original_file, :series_name, :show_on_fs
   attr_accessor :file
   attr_writer :show, :status, :series_name
   
@@ -11,12 +11,12 @@ class Episode
     @file = file
     @original_file = file
     @status, @show, @season, @number, @name, @series_name = false, "", "", "", "", ""
-    @status, @show, @season, @number  = tv_file File.basename file
+    @status, show, @season, @number  = tv_file File.basename file
     @season.gsub!(/^s/i,'')
     @season.gsub!(/^0/,'') if @season != "0"    
     @number.gsub!(/^0/,'') if @number != "0"
     
-    show_name_rename
+    @show = show_name_rename show
     @series_name = @show
     
     #@number.gsub!(/^/,'0') if @number.to_i < 10 and @number.to_i != 0
@@ -35,7 +35,7 @@ class Episode
   #  @show = @show.titlecase
   #end
   
-  # renames the file name based on tvdb
+  # renames the file name based on tvdb and other local criteria when writing to a filesystem.
   def fix_via_tvdb(episodes)
     success = true
     log("attempting to fix name based on tvdb") if $opt["debug"]
@@ -50,21 +50,15 @@ class Episode
       @name.gsub!(/\s+$/,'')    
       @show.gsub!(/\:/,'')
       @number.gsub!(/^/,'0') if @number.to_i < 10 and @number.to_i != 0
-      #@series_name = episodes[@show]["series name"] if @show != episodes[@show]["series name"]
 
-      #@series_name.gsub!(/\//,'-')
-      #@series_name.gsub!(/\?/,'')
-      #@series_name.gsub!(/\:/,' ')
-      #@series_name.gsub!(/\s+$/,'')
-      
-      @name = "#{@show} [#{@season}x#{@number}] #{@name}" 
+      @name = "#{@show_on_fs} [#{@season}x#{@number}] #{@name}" 
       @name.gsub!(/\s\s/,' ') 
       orig = @original_file
       @file = File.dirname(orig) + "/" + @name + File.extname(File.basename(orig))
 
       #FileUtils.mv(orig,@file,$options) if orig.downcase != @file.downcase
       if orig != @file and $config["settings"]["fs_case_sensitive"] == true
-        log "fix_via_tvdb: #{orig} to #{@file}"
+        log "fix_via_tvdb: #{orig} to #{@file}"        
         FileUtils.mv(orig,@file,$options) 
         @original_file = @file
       elsif orig.downcase != @file.downcase
@@ -82,11 +76,13 @@ class Episode
   end
   
   :private
-  def show_name_rename
-    @show.gsub!(/\./,' ')    
-    @show.gsub!(/\s+$/,'')    
-    $config_rename["rename"]["show"].keys.each {|s| @show.gsub!(/^#{Regexp.escape(s)}$/i,$config_rename["rename"]["show"][s])}    
-    @show.gsub!(/(\s|\.)(\d\d\d\d)$/,' (\2)')
-    @show = @show.downcase.titlecase
+  def show_name_rename(show)
+    show.gsub!(/\./,' ')    
+    show.gsub!(/\s+$/,'')    
+    $config_rename["rename"]["show"].keys.each {|s| show.gsub!(/^#{Regexp.escape(s)}$/i,$config_rename["rename"]["show"][s])}    
+    show.gsub!(/(\s|\.)(\d\d\d\d)$/,' (\2)')
+    show = show.downcase.titlecase
+    @show_on_fs = show.gsub(/\*/,'')
+    show
   end
 end
