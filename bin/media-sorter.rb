@@ -53,6 +53,8 @@ begin
     ["--dst",                         Getopt::OPTIONAL],
     ["--dst2",                        Getopt::OPTIONAL],
     ["--src",                         Getopt::OPTIONAL],
+    ["--dst_movie",                   Getopt::OPTIONAL],
+    ["--movie",                       Getopt::BOOLEAN],
     ["--log-level",                   Getopt::OPTIONAL]
     )
 rescue Getopt::Long::Error => e
@@ -71,6 +73,10 @@ src            = $config["settings"]["source_directory"]
 src            = $opt["src"] if $opt["src"]
 @tvdir         = $opt["dst"] if $opt["dst"]
 @tvdir2        = $opt["dst2"] if $opt["dst2"]
+
+@movie_dir     = $config["settings"]["destination_movie_directory"]
+@movie_dir     = $opt["dst_movie"] if $opt["dst_movie"]
+
 $options       = {:verbose=> true} 
 $options       = {:noop=>true,:verbose=> true} if $opt["dry"]
 $options       = $options
@@ -87,6 +93,18 @@ log("dry run enabled, no files will be renamed or moved") if $opt["dry"]
 
 # remove trailing / from bash_completion
 src = src.gsub(/\/$/,'')
+
+# movie mode
+if $opt["movie"]
+  log("movie mode")
+  get_directories(src).each do |directory|
+    log("found #{directory}",4)
+    movie = Movie.new directory    
+    movie.status = handle_movie_directory movie if movie.is_ep?    
+  end
+  log "movie end"
+  exit
+end
 
 # prune empty directories and exit
 if $opt["prune-empty-directories"]

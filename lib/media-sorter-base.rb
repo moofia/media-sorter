@@ -119,6 +119,8 @@ puts <<HELP
   --tvdb                      correct filename based on tvdb
   --tvdb-refresh              force a refresh of tvdb content (warning applies globally)
   --dry                       dryrun, no files are renamed / removed
+  --movie                     movie mode
+  --dst_movie                 destination folder for movies
   --log-level                 log level
   --find-missing              find missing episodes. only finds missing episodes between min and max
   --prune-empty-directories   prune empty directories
@@ -180,7 +182,7 @@ def get_show_id(show)
     parser = XML::Parser.file cache
     doc = parser.parse
   else
-    log("tvdb retrieving show id : #{show}")
+    log("tvdb retrieving show id via www: #{show}")
     show_escaped = CGI.escape(show)
     url = $config["tvdb"]["mirror"] + '/api/GetSeries.php?&language=en&seriesname=' + show_escaped
     if ENV.has_key? "http_proxy"
@@ -334,6 +336,19 @@ def move_file(f,target)
  FileUtils.mkdir_p(target,$options) if not File.directory? target
  FileUtils.mv(f,target,$options) if ( (File.dirname f) != target.gsub(/\/$/,'')) 
  1
+end
+
+# moves the directory to target location and creates directories if needed
+def move_directory(directory,target)
+ log_new("move_directory -> #{File.basename(directory) }")
+  
+ if File.exists? "#{target}/#{File.basename(directory)}"
+   log("warning dst directory exists: \'#{File.basename(directory)}\'")
+ else 
+   # if the directory does not exist it is created
+   FileUtils.mkdir_p(target,$options) if not File.directory? target
+   FileUtils.mv(directory,target,$options) if ( (File.dirname directory) != target.gsub(/\/$/,'')) 
+ end
 end
 
 def tvdb(show)
@@ -503,4 +518,68 @@ def is_on_secondary_storage(path,src)
     shows[show] = true if show =~ /\w/
   end
   shows
+end
+
+# check if the file is a movie file based on the directory name
+def movie_directory(directory)
+
+  movie = ""
+
+  $config['movies_directory']['regex'].each do |pattern|
+    if directory =~ /#{pattern}/i
+      movie   = $1 if $1
+      return true, movie
+    end
+  end
+  return false, movie
+end
+
+# check if the file is a movie file based on the file name
+def movie_file(file)
+  ext_list = $config["movies_file"]["media_extentions"].split(/,/).map.join("|")
+  ext = ".*\.(#{ext_list})$" 
+  name = ""
+
+  $config['movies_file']['regex'].each do |pattern|
+    if file =~ /.*#{pattern}#{ext}/i
+      name    = $1 if $1
+      return false if name =~ /^sample/i
+      return true
+    end
+  end
+  return false
+end
+
+# handle the movie directory and decided what actions must be taken
+def handle_movie_directory(movie)
+  log("handle_movie_directory")
+  files = find_files(true,movie.directory)
+  status = true
+  files.each do |file|
+    # we must first make sure its not a tv file
+    tv_status, tv_show, tv_season, tv_number  = tv_file File.basename file
+    if tv_status
+      log ("error: #{movie.directory} contains a tv show -> #{File.basename file}")
+      status = false 
+    
+    end
+    if not tv_status
+      # for now we only interested in if anything matches, later we can remove non movie
+      # related files if we wish
+      status = movie_file File.basename file if status == true
+    end
+    
+  end
+
+  if status == true
+    log("movie found - do something with it")
+    log("move #{movie.directory} -> #{@movie_dir}")
+    move_directory(movie.directory,@movie_dir)
+  else
+    log("movie found - but something is WRONG")
+    log("move #{movie.directory} -> contains invalid files doing nothing")
+    
+  end
+    
+  status
 end
