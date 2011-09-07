@@ -103,7 +103,7 @@ class Movie
   end
   
   # return the status if the episode matches our expected syntax
-  def is_ep?
+  def is_movie?
     @status
   end
 
@@ -145,7 +145,7 @@ class Movie
   
   # returns all Movie class's
   def self.find_all
-    ObjectSpace.each_object(Episode)
+    ObjectSpace.each_object(Movie)
   end
   
   :private

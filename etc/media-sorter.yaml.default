@@ -28,8 +28,9 @@ settings:
   season_dir_prepend: "Season "
   #season_dir_prepend: "season."
   
+  # no longer used, we test to see capabilities
   # file system is case sensitive or not
-  fs_case_sensitive: true
+  # fs_case_sensitive: true
   
 tvdb:
   api_key: 31384A8E0F418F3B
@@ -63,12 +64,17 @@ series:
 # matching a movie
 movies_directory:
   regex:
-    - (.*)(RERIP)                             # Movie.UNRATED.RERIP.DVDRip.XviD-fOBaR  
+    - (.*)(BluRay.x264)                        # Movie.BluRay.x264-fOBaR  
+    - (.*)(DVDRip.XviD)                        # Movie.DVDRip.XviD-fOBaR  
+    - (.*)(BDRip.XviD)                         # Movie.BDRip.XviD-fOBaR  
+    - (.*)(DVDRip.XviD)                        # Movie.DVDRip.XviD-fOBaR  
+    - (.*)(DVDRip.XviD)                        # Movie.DVDRip.XviD-fOBaR  
+    - (.*)(DVDRip)                             # Movie.UNRATED.RERIP.DVDRip.XviD-fOBaR  
     
 movies_file:
   media_extentions: avi,mkv,mpg,ogg,mpeg,mp4
   regex:
-    - (.*)                                   # moo-moviesdr-xvid-cda.avi  
+    - (.*)                                     # anything.avi  
     
 http_rpc:
   update_library: false

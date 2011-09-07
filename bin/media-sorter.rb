@@ -77,7 +77,8 @@ src            = $opt["src"] if $opt["src"]
 @movie_dir     = $config["settings"]["destination_movie_directory"]
 @movie_dir     = $opt["dst_movie"] if $opt["dst_movie"]
 
-$options       = {:verbose=> true} 
+#$options       = {:verbose=> true} 
+$options       = {} 
 $options       = {:noop=>true,:verbose=> true} if $opt["dry"]
 $options       = $options
 @tvdb_episodes = {}
@@ -91,6 +92,11 @@ $config["settings"]["log_level"] = $opt["log-level"].to_i if $opt["log-level"]
 log("debug enabled",4)
 log("dry run enabled, no files will be renamed or moved") if $opt["dry"]
 
+# test to see if the filesystem is case sensitive or not for destination paths.
+fs_case_sensitivity_test @movie_dir if @movie_dir
+fs_case_sensitivity_test @tvdir if @tvdir
+fs_case_sensitivity_test @tvdir2 if @tvdir2
+
 # remove trailing / from bash_completion
 src = src.gsub(/\/$/,'')
 
@@ -98,11 +104,23 @@ src = src.gsub(/\/$/,'')
 if $opt["movie"]
   log("movie mode")
   get_directories(src).each do |directory|
+    next if directory =~ /\.nfo$/i
+    next if directory =~ /\/subs$/i
+    next if directory =~ /\.sample$/i
+    
     log("found #{directory}",4)
     movie = Movie.new directory    
-    movie.status = handle_movie_directory movie if movie.is_ep?    
+    movie.status = handle_movie_directory movie if movie.is_movie?    
   end
-  log "movie end"
+
+  # see which media files were found but failed to an episode that we expected 
+  @new_movie = false
+  
+  puts
+  Movie.find_all.each do |m|
+    log("error: not a recognized movie #{m.directory}") if not m.is_movie?
+    @new_movie = true if m.is_movie?
+  end
   exit
 end
 

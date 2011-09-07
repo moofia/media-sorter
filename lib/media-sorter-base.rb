@@ -340,7 +340,7 @@ end
 
 # moves the directory to target location and creates directories if needed
 def move_directory(directory,target)
- log_new("move_directory -> #{File.basename(directory) }")
+ log_new("move_directory: #{File.basename(directory)}")
   
  if File.exists? "#{target}/#{File.basename(directory)}"
    log("warning dst directory exists: \'#{File.basename(directory)}\'")
@@ -524,7 +524,6 @@ end
 def movie_directory(directory)
 
   movie = ""
-
   $config['movies_directory']['regex'].each do |pattern|
     if directory =~ /#{pattern}/i
       movie   = $1 if $1
@@ -552,8 +551,8 @@ end
 
 # handle the movie directory and decided what actions must be taken
 def handle_movie_directory(movie)
-  log("handle_movie_directory")
-  files = find_files(true,movie.directory)
+  #log("handle_movie_directory: #{movie.directory}")
+  files = find_files(false,movie.directory)
   status = true
   files.each do |file|
     # we must first make sure its not a tv file
@@ -561,7 +560,6 @@ def handle_movie_directory(movie)
     if tv_status
       log ("error: #{movie.directory} contains a tv show -> #{File.basename file}")
       status = false 
-    
     end
     if not tv_status
       # for now we only interested in if anything matches, later we can remove non movie
@@ -572,14 +570,43 @@ def handle_movie_directory(movie)
   end
 
   if status == true
-    log("movie found - do something with it")
-    log("move #{movie.directory} -> #{@movie_dir}")
     move_directory(movie.directory,@movie_dir)
   else
-    log("movie found - but something is WRONG")
-    log("move #{movie.directory} -> contains invalid files doing nothing")
-    
+    log("move #{movie.directory} -> contains invalid files doing nothing")    
   end
     
   status
+end
+
+# test if the filesystem is case sensitive or not
+def fs_case_sensitivity_test(dst)
+
+  test_directory = "#{dst}/#{$$}"
+  if File.directory? dst
+    if not File.directory? test_directory
+      #log("fs_case_sensitivity_test on #{dst}")
+      $options_fs = {}
+      #$options_fs = {:noop=>true,:verbose=> true} if $opt["dry"]
+      $options_fs = {:noop=>true} if $opt["dry"]
+      
+      FileUtils.mkdir_p(test_directory,$options_fs)       
+      file1 = "#{test_directory}/file"
+      file2 = "#{test_directory}/FILE"
+      FileUtils.touch(file1,$options_fs)
+      FileUtils.touch(file2,$options_fs)
+      
+      count = 0
+      Find.find(test_directory) do |file|
+        next if  FileTest.directory?(file)
+        count = count + 1
+      end
+      
+      FileUtils.rm(file1,$options_fs)
+      FileUtils.rm(file2,$options_fs) if count == 2
+      FileUtils.rmdir(test_directory,$options_fs)
+
+      $config["settings"]["fs_case_sensitive"] = true if count == 2
+      $config["settings"]["fs_case_sensitive"] = false if count == 1      
+    end
+  end  
 end
