@@ -14,7 +14,7 @@ end
 # prompt new, based on actions to set some defaults
 def handle_yes_no(action,msg)
   if action == "move_movie"
-    if not $config["settings"]["prompt_move_movie"]
+    if $config["settings"]["prompt_move_movie"]
       return yes_no_prompt(msg)
     else
       return true
