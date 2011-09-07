@@ -2,8 +2,11 @@
 
 # yes or no prompt handling
 def yes_no_prompt(msg)
-  print "#{@script} -> #{msg} [y/n] ? "
-  answer = STDIN.gets.chomp
+  answer = ""
+  while answer !~ /^y$|^n$/
+    print "#{@script} -> #{msg} [y/n] ? "
+    answer = STDIN.gets.chomp
+  end
   return true if answer =~ /^y$/i
   false
 end
