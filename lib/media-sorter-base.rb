@@ -1,5 +1,25 @@
 # start of an include file for all common methods
 
+# yes or no prompt handling
+def yes_no_prompt(msg)
+  print "#{@script} -> #{msg} [y/n] ? "
+  answer = STDIN.gets.chomp
+  return true if answer =~ /^y$/i
+  false
+end
+
+# prompt new, based on actions to set some defaults
+def handle_yes_no(action,msg)
+  if action == "move_movie"
+    if not $config["settings"]["prompt_move_movie"]
+      return yes_no_prompt(msg)
+    else
+      return true
+    end
+  end
+  false
+end
+
 # prompt, based on action delete etc
 def prompt(file,action,msg)
   if not $config["settings"]["prompt_prune_duplicates"]
@@ -570,7 +590,8 @@ def handle_movie_directory(movie)
   end
 
   if status == true
-    move_directory(movie.directory,@movie_dir)
+    result = handle_yes_no("move_movie","movie found: move #{movie.title_full}")
+    move_directory(movie.directory,@movie_dir) if result
   else
     log("move #{movie.directory} -> contains invalid files doing nothing")    
   end

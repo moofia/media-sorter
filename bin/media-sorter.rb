@@ -33,7 +33,7 @@ $script_dir = File.expand_path($0).gsub(/\/bin\/.*/,'')
 # main include file for the script
 require "#{$script_dir}/lib/media-sorter-base"
 require "#{$script_dir}/lib/media-sorter-classes"
-# json rpc calls
+# json rpc calls for xbmc
 require "#{$script_dir}/lib/media-sorter-xbmc-module"
 
 @script = File.basename $0 
@@ -165,9 +165,21 @@ puts
 
 # see which media files were found but failed to an episode that we expected 
 @new_media = false
+directories = {}
 Episode.find_all.each do |e|
-  log("error: not a recognized episode #{e.file}") if not e.is_ep?
+  if not e.is_ep?
+    log("error: not a recognized episode #{e.file}") 
+    directories[File.dirname e.file] = true
+  end
   @new_media = true if e.is_ep?
+end
+
+if directories.count > 0 and @movie_dir =~ /\w/
+  log("directories found that is not a tv series, movie_dir is set , checking for movies") 
+  directories.keys.each do |directory|
+    movie = Movie.new directory    
+    movie.status = handle_movie_directory movie if movie.is_movie?
+  end
 end
 
 if $config["http_rpc"]["update_library"]

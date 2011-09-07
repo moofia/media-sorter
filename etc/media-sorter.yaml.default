@@ -2,7 +2,7 @@
 settings:
   source_directory: /media/TERA/sort
   destination_directory: /media/TERA/tv
-  destination_movie_directory: /media/TERA/movies/watch
+  #destination_movie_directory: /media/TERA/movies/watch
 
   #dst_no_hierarchy: true
   # if log_directory not set defaults to install directory log
@@ -15,6 +15,8 @@ settings:
   # 3 - error
   # 4 - debug
   log_level: 1
+  
+  prompt_move_movie: false
   
   prompt_prune_duplicates: true
   # auto pruning of duplicates, new src is always removed.
