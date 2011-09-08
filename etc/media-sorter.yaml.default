@@ -16,7 +16,7 @@ settings:
   # 4 - debug
   log_level: 1
   
-  prompt_move_movie: true
+  prompt_move_movie: false
   
   prompt_prune_duplicates: true
   # auto pruning of duplicates, new src is always removed.
@@ -41,7 +41,12 @@ tvdb:
   #cache_directory: /tmp/tvdb
   default: true # always query tvdb
   tvdb_find_missing: false # enables finding the last episode from tvdb when finding missing shows
-  
+
+themoviedb:
+  api_key: APIKEY
+  base_url: http://api.themoviedb.org/2.1
+  default: false
+    
 # regex patterns of files 3 arguments ($1-$4) should be matched
 # $1 = show
 # $2 = season
