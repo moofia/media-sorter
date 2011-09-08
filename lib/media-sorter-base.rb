@@ -47,6 +47,11 @@ def debug(d)
   exit 2
 end
 
+# keep state of the errors so they can be displayed at the end
+def handle_error(msg)
+  @errors[msg] = true
+end
+
 # generic logger
 def log(msg,level=nil)
  level ||= 1
@@ -242,7 +247,7 @@ end
 def look_and_mv(episode)
   tvdb_result = tvdb(episode.show) if ($opt["tvdb"]) && (! @tvdb_episodes.has_key?(episode.show))
   if tvdb_result == false
-    log("failed to find tvshow \'#{episode.show}\' from tvdb, skipping..")
+    handle_error("failed to find tvshow \'#{episode.show}\' from tvdb, skipping..")
     return false
   end
   re_cache = episode.fix_via_tvdb @tvdb_episodes if $opt["tvdb"] and @tvdb_episodes.has_key?(episode.show)
@@ -254,7 +259,7 @@ def look_and_mv(episode)
     @tvdb_episodes = {}
     tvdb_result = tvdb(episode.show) if ($opt["tvdb"]) && (! @tvdb_episodes.has_key?(episode.show))
     if tvdb_result == false
-      log("failed to find tvshow \'#{episode.show}\' from tvdb, skipping..")
+      handle_error("failed to find tvshow \'#{episode.show}\' from tvdb, skipping..")
       return false
     end
     episode.fix_via_tvdb @tvdb_episodes if $opt["tvdb"] and @tvdb_episodes.has_key?(episode.show)
@@ -293,7 +298,7 @@ def find_missing(files)
       tvdb_result = tvdb(show)
       
       if tvdb_result == false 
-        log("failed to find tvshow \'#{show}\' from tvdb, skipping..")
+        handle_error("failed to find tvshow \'#{show}\' from tvdb, skipping..")
       else
         debug @tvdb_episodes
         max = @tvdb_episodes[show][season].max[0]
@@ -437,8 +442,8 @@ end
 def movie_lookup(movie)
   log("see if we have a movie api, clean up name and populate object with extra data")
   log("movie_lookup for --> #{movie.name}")
-  debug themoviedb_lookup movie.name
-  debug "movie_lookup end"
+  themoviedb_lookup movie.name
+  log "movie_lookup end"
 end
 
 # handle the movie directory and decided what actions must be taken

@@ -124,7 +124,11 @@ class Movie
     name.gsub!(/\./,' ')
     name.gsub!(/\s?RERIP$/i,'')
     name.gsub!(/\s?UNRATED$/i,'')
+    name.gsub!(/\s?LiMITED$/i,'')
+    name.gsub!(/\s?PROPER$/i,'')
     name.gsub!(/\s+/,' ')
+    name.gsub!(/\s?UNRATED$/i,'')
+    name.gsub!(/\(\d\d\d\d\)/,"\1")
     @name = name
   end
 end

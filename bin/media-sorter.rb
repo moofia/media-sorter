@@ -91,6 +91,7 @@ $options       = {:noop=>true,:verbose=> true} if $opt["dry"]
 $options       = $options
 @tvdb_episodes = {}
 $cache_state   = false
+@errors        = {}
 
 $opt["tvdb"]   = $config["tvdb"]["default"] if not $opt["tvdb"]
 $opt["dst_no_hierarchy"]  = $config["settings"]["dst_no_hierarchy"] if $config["settings"]["dst_no_hierarchy"]
@@ -169,7 +170,12 @@ if $config["settings"]["prune_empty_directories"] and $opt["recursive"]
   remove_empty_directories(src)
 end
 
+# show errors
 puts
+
+@errors.keys.each do |e|
+  log(e)
+end
 
 # see which media files were found but failed to an episode that we expected 
 @new_media = false

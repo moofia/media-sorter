@@ -82,7 +82,7 @@ def get_show_id(show)
     end
   end
   if show_id == ""
-   log("tvdb error: can not find id for show \'#{show}\'")
+   handle_error("tvdb error: can not find id for show \'#{show}\'")
    show_id = false
   end
   show_id

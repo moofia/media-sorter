@@ -3,6 +3,7 @@
 # first call for a lookup, only returns a new name of the movie and a status
 def themoviedb_lookup(name)
   log ("themoviedb_lookup: #{name}")
+  return
   state = false
   themoviedb_auth
   state, new_name = themoviedb_movie_search name
@@ -30,7 +31,7 @@ def themoviedb_movie_search(name)
   
   log("themoviedb_movie_search: update object")
   
-  exit 2
+  debug("forced exit in themoviedb_movie_search")
   new_name = name
   return state, new_name
 end
