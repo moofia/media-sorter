@@ -33,10 +33,18 @@ $script_dir = File.expand_path($0).gsub(/\/bin\/.*/,'')
 # main include file for the script
 require "#{$script_dir}/lib/media-sorter-base"
 require "#{$script_dir}/lib/media-sorter-classes"
+require "#{$script_dir}/lib/media-sorter-thetvdb.rb"
+require "#{$script_dir}/lib/media-sorter-themoviedb.rb"
 # json rpc calls for xbmc
 require "#{$script_dir}/lib/media-sorter-xbmc-module"
 
 @script = File.basename $0 
+
+# exit on ctrl-c
+trap("INT") do
+  puts
+  exit 2
+end 
 
 # options 
 begin
@@ -73,7 +81,7 @@ src            = $config["settings"]["source_directory"]
 src            = $opt["src"] if $opt["src"]
 @tvdir         = $opt["dst"] if $opt["dst"]
 @tvdir2        = $opt["dst2"] if $opt["dst2"]
-
+@src           = src
 @movie_dir     = $config["settings"]["destination_movie_directory"]
 @movie_dir     = $opt["dst_movie"] if $opt["dst_movie"]
 
@@ -175,7 +183,7 @@ Episode.find_all.each do |e|
 end
 
 if directories.count > 0 and @movie_dir =~ /\w/
-  log("directories found that is not a tv series, movie_dir is set , checking for movies") 
+  log("directories found that are not a tv series, movie_dir is set , checking for movies") 
   directories.keys.each do |directory|
     movie = Movie.new directory    
     movie.status = handle_movie_directory movie if movie.is_movie?

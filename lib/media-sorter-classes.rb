@@ -91,7 +91,7 @@ end
 # Movie class, very simple for now. 
 # Movies are based on the directory name.
 class Movie
-  attr_reader :directory, :movie, :title_full
+  attr_reader :directory, :title_full, :name
   attr_accessor :directory
   attr_writer :movie, :status
   
@@ -101,8 +101,8 @@ class Movie
     @original_directory = directory
     @status = false
     @title_full = File.basename directory
-    @status, @movie  = movie_directory File.basename directory
-    
+    @status, name  = movie_directory File.basename directory
+    @name = clean_movie_name name
   end
   
   # return the status if the movie matches our expected syntax
@@ -115,4 +115,16 @@ class Movie
     ObjectSpace.each_object(Movie)
   end
 
+  def enrich
+    enrich_object(self)
+  end
+  
+  :private
+  def clean_movie_name(name)
+    name.gsub!(/\./,' ')
+    name.gsub!(/\s?RERIP$/i,'')
+    name.gsub!(/\s?UNRATED$/i,'')
+    name.gsub!(/\s+/,' ')
+    @name = name
+  end
 end

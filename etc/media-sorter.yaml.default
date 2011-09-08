@@ -16,7 +16,7 @@ settings:
   # 4 - debug
   log_level: 1
   
-  prompt_move_movie: false
+  prompt_move_movie: true
   
   prompt_prune_duplicates: true
   # auto pruning of duplicates, new src is always removed.
