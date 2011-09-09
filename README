@@ -1,4 +1,13 @@
 
+dependancies:
+
+gem install awesome_print
+gem install titlecase
+gem install getopt
+gem install json
+
+
+
   usage: media-sorter.rb --src [src dir] --dst [destination dir] --debug
 
   --src                       source folder
