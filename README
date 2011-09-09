@@ -1,1 +1,22 @@
-must add stuff in here, email me for questions for now
+
+  usage: media-sorter.rb --src [src dir] --dst [destination dir] --debug
+
+  --src                       source folder
+  --dst                       destination folder
+  --dst2                      secondary destination folder which overrides primary if show found
+  --dst_no_hierarchy          destination folder hierarchy off
+  --debug                     extra log messages for debugging
+  --recursive                 recurse directory tree
+  --tvdb                      correct filename based on tvdb
+  --tvdb-refresh              force a refresh of tvdb content (warning applies globally)
+  --dry                       dryrun, no files are renamed / removed
+  --movie                     movie mode
+  --dst_movie                 destination folder for movies
+  --log-level                 log level
+  --find-missing              find missing episodes. only finds missing episodes between min and max
+  --prune-empty-directories   prune empty directories
+
+  --help
+
+  edit ./bin/etc/media-sorter.yaml for more options
+
