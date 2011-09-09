@@ -312,7 +312,7 @@ def handle_series(episode)
     log("re-caching from tvdb")
     $opt["tvdb-refresh"] = true
     @tvdb_episodes = {}
-    tvdb_result = tvdb(episode.show) if ($opt["tvdb"]) && (! @tvdb_episodes.has_key?(episode.show))
+    tvdb_result = series_lookup(episode) if ($opt["tvdb"]) && (! @tvdb_episodes.has_key?(episode.show))
     if tvdb_result == false
       handle_error("failed to find tvshow \'#{episode.show}\' from tvdb, skipping..")
       return false
@@ -507,7 +507,7 @@ end
 # wrapper method to decided which db to query
 def series_lookup(episode)
   if $config.has_key? "tvdb" and $config["tvdb"].has_key? "api_key" and $config["tvdb"].has_key? "mirror"
-    log("series_lookup tvdb: #{episode.show}")
+    #log("series_lookup tvdb: #{episode.show}")
     thetvdb_lookup(episode.show)
   end
 end
