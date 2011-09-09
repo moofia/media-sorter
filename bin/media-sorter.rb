@@ -2,14 +2,6 @@
 
 # script to src media from a storage location to @tv folder directories
 
-# dependancies
-#
-#
-# gem install awesome_print
-# gem install titlecase
-# gem install getopt
-# gem install json
-
 # TODO: tvdb cache does not refresh
 # TODO: tvdb api requests that one respects the future use of mirrors, must implement
 # TODO: Show class ?? not sure if i would gain anything by this, might mask tvdb totally though which will be good

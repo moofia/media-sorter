@@ -8,7 +8,7 @@ gem install json
 
 
 
-  usage: media-sorter.rb --src [src dir] --dst [destination dir] --debug
+usage: media-sorter.rb --src [src dir] --dst [destination dir] --debug
 
   --src                       source folder
   --dst                       destination folder
@@ -27,5 +27,5 @@ gem install json
 
   --help
 
-  edit ./bin/etc/media-sorter.yaml for more options
+  edit etc/media-sorter.yaml for more options
 
