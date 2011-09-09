@@ -45,7 +45,8 @@ tvdb:
 themoviedb:
   api_key: APIKEY
   base_url: http://api.themoviedb.org/2.1
-  default: false
+  default: true
+  display_info_move: false
     
 # regex patterns of files 3 arguments ($1-$4) should be matched
 # $1 = show
