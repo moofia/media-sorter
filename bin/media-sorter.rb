@@ -161,7 +161,7 @@ puts
 files.each do |file|
   log("found #{file}",4)
   episode = Episode.new file
-  episode.status = look_and_mv episode if episode.is_ep?  
+  episode.status = handle_series episode if episode.is_ep?  
 end
 
 puts

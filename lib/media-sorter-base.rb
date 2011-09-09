@@ -162,6 +162,54 @@ HELP
 exit
 end
 
+# returns a xml of the url to get via a proxy
+def http_get_via_proxy(url)
+  log("http get via proxy : #{url}") if $opt["debug"]
+  begin
+    proxy = ENV['http_proxy']
+    proxy_host, proxy_port = proxy.gsub(/^http:\/\//,'').split(/:/)
+    myurl = URI.parse(url)
+    req = Net::HTTP::Get.new(myurl.request_uri)
+    res= Net::HTTP::Proxy(proxy_host, proxy_port).start(myurl.host,myurl.port) { |http| http.request(req) }
+    html = res.body
+  # XXX must fix the rescue its not working
+  rescue => err
+    log("Error: #{err}")
+    exit 2
+  end
+  html
+end
+
+# returns a xml of the url to gets directly
+def http_get_direct(url)
+  log("http get : #{url}") if $opt["debug"]
+  begin
+    html = Net::HTTP.get_response(URI.parse(url)).body
+  # XXX must fix the rescue its not working
+  rescue => err
+    log("Error: #{err}")
+    exit 2
+  end
+  html
+end
+
+# handle http gets
+def http_get(url)
+  if ENV.has_key? "http_proxy"
+    data = http_get_via_proxy(url)
+  else
+    data = http_get_direct(url)      
+  end
+  data
+end
+
+# make sure there is enough free space on the dst
+def ensure_free_space(src,dst)
+  state = true
+    
+  return state
+end
+
 # moves the file to target location and creates directories if needed
 def move_file(f,target)
  log_new("move_file -> #{File.basename(f) }")
@@ -224,9 +272,16 @@ def move_file(f,target)
    return 2
  end
  
- # if the directory does not exist it is created
- FileUtils.mkdir_p(target,$options) if not File.directory? target
- FileUtils.mv(f,target,$options) if ( (File.dirname f) != target.gsub(/\/$/,'')) 
+ is_space = ensure_free_space f, target
+ 
+ if is_space 
+   # if the directory does not exist it is created
+   FileUtils.mkdir_p(target,$options) if not File.directory? target
+   FileUtils.mv(f,target,$options) if ( (File.dirname f) != target.gsub(/\/$/,'')) 
+ else
+   log("error not enough free space on \"#{target}\"")
+ end
+ 
  1
 end
 
@@ -244,8 +299,8 @@ def move_directory(directory,target)
 end
 
 # call first to look and decide on renaming
-def look_and_mv(episode)
-  tvdb_result = tvdb(episode.show) if ($opt["tvdb"]) && (! @tvdb_episodes.has_key?(episode.show))
+def handle_series(episode)
+  tvdb_result = series_lookup(episode) if ($opt["tvdb"]) && (! @tvdb_episodes.has_key?(episode.show))
   if tvdb_result == false
     handle_error("failed to find tvshow \'#{episode.show}\' from tvdb, skipping..")
     return false
@@ -358,6 +413,7 @@ def remove_arb_dot_files(src)
 
 end
 
+# returns a list of directories
 def get_directories(src)
   directories = Array.new
   Find.find(src) do |path|
@@ -368,6 +424,7 @@ def get_directories(src)
   directories.reverse
 end
 
+# removes empty directories
 def remove_empty_directories(src)
   found = false
   get_directories(src).each do |dir|
@@ -439,16 +496,25 @@ def enrich_object(object)
   movie_lookup(object) if object.class.to_s == "Movie" and $config["themoviedb"]["default"] == true
 end
 
+# wrapper method to decided which db to query
 def movie_lookup(movie)
-  log("see if we have a movie api, clean up name and populate object with extra data")
-  log("movie_lookup for --> #{movie.name}")
-  themoviedb_lookup movie.name
-  log "movie_lookup end"
+  if $config.has_key? "themoviedb" and $config["themoviedb"].has_key? "api_key" and $config["themoviedb"].has_key? "base_url"
+    log("movie_lookup themoviedb: #{movie.name}")
+    themoviedb_lookup movie
+  end
+end
+
+# wrapper method to decided which db to query
+def series_lookup(episode)
+  if $config.has_key? "tvdb" and $config["tvdb"].has_key? "api_key" and $config["tvdb"].has_key? "mirror"
+    log("series_lookup tvdb: #{episode.show}")
+    thetvdb_lookup(episode.show)
+  end
 end
 
 # handle the movie directory and decided what actions must be taken
 def handle_movie_directory(movie)
-  #log("handle_movie_directory: #{movie.directory}")
+  log("handle_movie_directory: #{movie.directory}")
   files = find_files(false,movie.directory)
   status = true
   files.each do |file|
@@ -466,9 +532,14 @@ def handle_movie_directory(movie)
   end
 
   if status == true
-    result = handle_yes_no("move_movie","movie found: move #{movie.title_full}")
+    movie.enrich
+    # hmmm not too sure about this ?
+    if $config["themoviedb"].has_key? "display_info_move" and $config["themoviedb"]["display_info_move"] == true
+      themoviedb_display movie 
+      result = handle_yes_no("move_movie","keep \"#{movie.name}\" based on the description ")
+    end
+    result = handle_yes_no("move_movie","movie found: move #{movie.title_full} \"#{movie.name}\"")
     if result
-      movie.enrich
       move_directory(movie.directory,@movie_dir) 
     end
   else

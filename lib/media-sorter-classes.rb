@@ -27,14 +27,6 @@ class Episode
     @status
   end
   
-  # tv show name
-  #def show
-  #  @show.gsub!(/\./,' ')
-  #  $config["rename"]["show"].keys.each {|s| @show.gsub!(/^#{Regexp.escape(s)}$/i,$config["rename"]["show"][s])}
-  #  @show.gsub!(/(\s|\.)(\d\d\d\d)$/,'(\2)')
-  #  @show = @show.titlecase
-  #end
-  
   # renames the file name based on tvdb and other local criteria when writing to a filesystem.
   def fix_via_tvdb(episodes)
     re_cache = true
@@ -91,15 +83,15 @@ end
 # Movie class, very simple for now. 
 # Movies are based on the directory name.
 class Movie
-  attr_reader :directory, :title_full, :name
+  attr_reader :directory, :title_full, :name, :enrich_status, :enrich_movie_full
   attr_accessor :directory
-  attr_writer :movie, :status
+  attr_writer :name, :status, :enrich_status, :enrich_movie_full
   
   # initialize the object with some basic settings
   def initialize(directory)
     @directory = directory
     @original_directory = directory
-    @status = false
+    @status, @enrich_movie_full, @enrich_status = false, "", false
     @title_full = File.basename directory
     @status, name  = movie_directory File.basename directory
     @name = clean_movie_name name

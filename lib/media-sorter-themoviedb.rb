@@ -1,14 +1,14 @@
 # http://www.themoviedb.org
 
 # first call for a lookup, only returns a new name of the movie and a status
-def themoviedb_lookup(name)
-  log ("themoviedb_lookup: #{name}")
-  return
+def themoviedb_lookup(movie)
+  log ("themoviedb_lookup: #{movie.name}")
   state = false
   themoviedb_auth
-  state, new_name = themoviedb_movie_search name
-  
-  return state, new_name
+  state, new_name, movie_full = themoviedb_movie_search movie.name
+  movie.name = new_name
+  movie.enrich_movie_full = movie_full
+  movie.enrich_status = state
 end
 
 # ? not sure if needed for readonly
@@ -22,18 +22,21 @@ end
 # It is a mandatory method in order to get the movie id to pass to (as an example) the Movie.getInfo method.
 def themoviedb_movie_search(name)
   log("themoviedb_movie_search: #{name}")
+  
+  # dont have a valid api key yet so just return true all the time.
+  #return true, name , "The Earth is caught in the middle of an intergalactic war between two races of robots,objects, including cars, trucks, planes and other technological creations."
+  
   state = false
   puts 
   url = themoviedb_build_url("Transformers","search")
-  result =  http_get_xml(url)
+  result =  http_get(url)
   json_result = JSON.parse(result)
-  themoviedb_movie_search_parse_json(json_result)
+  state, movie_full = themoviedb_movie_search_parse_json(json_result)
   
   log("themoviedb_movie_search: update object")
   
-  debug("forced exit in themoviedb_movie_search")
   new_name = name
-  return state, new_name
+  return state, new_name, movie_full
 end
 
 # http://api.themoviedb.org/2.1/methods/Movie.getInfo
@@ -44,9 +47,11 @@ def themoviedb_movie_getInfo(name)
   log("themoviedb_movie_getInfo: #{name}")
 end
 
+# default data returned is json, parse it
 def themoviedb_movie_search_parse_json(json_data)
   log("themoviedb_movie_search: json_data")
-  debug json_data
+  ap json_data if $opt["debug"]
+  return true, "The Earth is caught in the middle of an intergalactic war between two races of robots,objects, including cars, trucks, planes and other technological creations."
 end
 
 def themoviedb_build_url(name,method)
@@ -59,45 +64,11 @@ def themoviedb_build_url(name,method)
   url
 end
 
+# display retrieved data
+def themoviedb_display(movie)
+  if movie.enrich_status == true
+    ap movie
+  end
+end
+
 #### new html methods, will be moved elsewhere later
-
-# returns a xml of the url to get via a proxy
-def http_get_xml_via_proxy(url)
-  log("http get via proxy : #{url}") if $opt["debug"]
-  begin
-    proxy = ENV['http_proxy']
-    proxy_host, proxy_port = proxy.gsub(/^http:\/\//,'').split(/:/)
-    myurl = URI.parse(url)
-    req = Net::HTTP::Get.new(myurl.request_uri)
-    res= Net::HTTP::Proxy(proxy_host, proxy_port).start(myurl.host,myurl.port) { |http| http.request(req) }
-    html = res.body
-  # XXX must fix the rescue its not working
-  rescue => err
-    log("Error: #{err}")
-    exit 2
-  end
-  html
-end
-
-# returns a xml of the url to gets directly
-def http_get_xml_direct(url)
-  log("http get : #{url}") if $opt["debug"]
-  begin
-    html = Net::HTTP.get_response(URI.parse(url)).body
-  # XXX must fix the rescue its not working
-  rescue => err
-    log("Error: #{err}")
-    exit 2
-  end
-  html
-end
-
-# handle http gets
-def http_get_xml(url)
-  if ENV.has_key? "http_proxy"
-    xml_data = http_get_xml_via_proxy(url)
-  else
-    xml_data = http_get_xml_direct(url)      
-  end
-  xml_data
-end
