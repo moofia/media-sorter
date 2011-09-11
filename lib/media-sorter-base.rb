@@ -104,6 +104,45 @@ def tv_file(file)
   return false, name, season, episode
 end
 
+# process movies to see what to do with it
+def process_movie(src)
+  return if src =~ /\.nfo$/i
+  return if src =~ /\/subs$/i
+  return if src =~ /\.sample$/i
+  movie = Movie.new src    
+  movie.status = handle_movie_directory movie if movie.is_movie?
+end
+
+# process file to see what to do with it or what the directory might be
+def process_file(src)
+  media = ""
+  # files first
+  get_files(src).each do |file|
+    
+    # first we check if the file is a tv series
+    episode_status, episode_name, episode_season, episode_episode = tv_file(file)
+    if episode_status == true
+      episode = Episode.new file
+      if episode.is_ep?
+        episode.status = handle_series episode 
+        media = episode.class.to_s
+      end
+    end
+    
+    # second we check if the file is music
+    music_status = music_file(file)
+    if music_status == true
+      music = Music.new file
+      if music.is_music?
+        music.status = handle_music music 
+        media = music.class.to_s
+      end
+    end
+    
+  end # get_files
+  media
+end
+
 # returns an array of tv files
 def find_files(recusive,sort)
   ext_list = $config["series"]["media_extentions"].split(/,/).map.join("|")
@@ -112,8 +151,6 @@ def find_files(recusive,sort)
     next if File.dirname(path) != sort and not recusive
     next if File.directory? path
     next if File.basename(path) =~ /^\./
-    #status, name, season, episode  =  tv_file File.basename(path)
-    #next if not status
     next if path !~ /#{ext_list}$/
     files << path
   end
@@ -138,6 +175,7 @@ def help
 puts <<HELP
   usage: #{@script} --src [src dir] --dst [destination dir] --debug
 
+  --verbose                   verbose output
   --src                       source folder
   --dst                       destination folder
   --dst2                      secondary destination folder which overrides primary if show found
@@ -298,6 +336,13 @@ def move_directory(directory,target)
  end
 end
 
+# call first for music to look and decide on what actions on will take with renaming or moving
+def handle_music(music)
+  return if $config['music_file']['process'] != true
+  log("handle_music -> do something with the music file #{music.file}")
+  ap $config['music_file']['storage'] if $opt["debug"]
+end
+
 # call first to look and decide on renaming
 def handle_series(episode)
   tvdb_result = series_lookup(episode) if ($opt["tvdb"]) && (! @tvdb_episodes.has_key?(episode.show))
@@ -413,10 +458,22 @@ def remove_arb_dot_files(src)
 
 end
 
+# returns a list of files
+def get_files(src)
+  files = Array.new
+  Find.find(src) do |path|
+    next if File.directory? path
+    files.push path
+  end
+  files.reverse
+end
+
 # returns a list of directories
 def get_directories(src)
   directories = Array.new
+  #return directories if not $opt["recursive"]
   Find.find(src) do |path|
+    next if File.dirname(path) != src and not $opt["recursive"]
     next if path == src
     next if not File.directory? path
     directories.push path
@@ -491,6 +548,22 @@ def movie_file(file)
   return false
 end
 
+# check if the file is a movie file based on the file name
+def music_file(file)
+  ext_list = $config["music_file"]["media_extentions"].split(/,/).map.join("|")
+  ext = ".*\.(#{ext_list})$" 
+  name = ""
+
+  $config['music_file']['regex'].each do |pattern|
+    if file =~ /.*#{pattern}#{ext}/i
+      name    = $1 if $1
+      return false if name =~ /^sample/i
+      return true
+    end
+  end
+  return false
+end
+
 # based on what the object is enrich the object
 def enrich_object(object)
   movie_lookup(object) if object.class.to_s == "Movie" and $config["themoviedb"]["default"] == true
@@ -550,34 +623,75 @@ def handle_movie_directory(movie)
 end
 
 # test if the filesystem is case sensitive or not
-def fs_case_sensitivity_test(dst)
-
+def fs_case_sensitivity_test
+  dirs = []
+  dirs << @movie_dir if @movie_dir
+  dirs << @tvdir if @tvdir
+  dirs << @tvdir2 if @tvdir2
+  dirs.each do |dst|
   test_directory = "#{dst}/#{$$}"
-  if File.directory? dst
-    if not File.directory? test_directory
-      #log("fs_case_sensitivity_test on #{dst}")
-      $options_fs = {}
-      #$options_fs = {:noop=>true,:verbose=> true} if $opt["dry"]
-      $options_fs = {:noop=>true} if $opt["dry"]
-      
-      FileUtils.mkdir_p(test_directory,$options_fs)       
-      file1 = "#{test_directory}/file"
-      file2 = "#{test_directory}/FILE"
-      FileUtils.touch(file1,$options_fs)
-      FileUtils.touch(file2,$options_fs)
-      
-      count = 0
-      Find.find(test_directory) do |file|
-        next if  FileTest.directory?(file)
-        count = count + 1
+    if File.directory? dst
+      if not File.directory? test_directory
+        log("fs_case_sensitivity_test on #{dst}") if $opt["debug"]
+        $options_fs = {}
+        #$options_fs = {:noop=>true,:verbose=> true} if $opt["dry"]
+        $options_fs = {:noop=>true} if $opt["dry"]
+        
+        FileUtils.mkdir_p(test_directory,$options_fs)       
+        file1 = "#{test_directory}/file"
+        file2 = "#{test_directory}/FILE"
+        FileUtils.touch(file1,$options_fs)
+        FileUtils.touch(file2,$options_fs)
+        
+        count = 0
+        Find.find(test_directory) do |file|
+          next if  FileTest.directory?(file)
+          count = count + 1
+        end
+        
+        FileUtils.rm(file1,$options_fs)
+        FileUtils.rm(file2,$options_fs) if count == 2
+        FileUtils.rmdir(test_directory,$options_fs)
+    
+        $config["settings"]["fs_case_sensitive"] = true if count == 2
+        $config["settings"]["fs_case_sensitive"] = false if count == 1      
       end
-      
-      FileUtils.rm(file1,$options_fs)
-      FileUtils.rm(file2,$options_fs) if count == 2
-      FileUtils.rmdir(test_directory,$options_fs)
+    end  
+  end
+end
 
-      $config["settings"]["fs_case_sensitive"] = true if count == 2
-      $config["settings"]["fs_case_sensitive"] = false if count == 1      
+def display_errors
+  puts
+  # see which media files were found but failed to an episode that we expected 
+  @new_movie = false
+  Movie.find_all.each do |m|
+    log("error: not a recognized movie #{m.directory}") if not m.is_movie?
+    @new_movie = true if m.is_movie?
+  end
+  # show errors
+  puts
+
+  @errors.keys.each do |e|
+    log(e)
+  end
+
+  # see which media files were found but failed to an episode that we expected 
+  @new_media = false
+  directories = {}
+  Episode.find_all.each do |e|
+    if not e.is_ep?
+      log("error: not a recognized episode #{e.file}") 
+      directories[File.dirname e.file] = true
     end
-  end  
+    @new_media = true if e.is_ep?
+  end
+
+  if directories.count > 0 and @movie_dir =~ /\w/
+    log("directories found that are not a tv series, movie_dir is set , checking for movies") 
+    directories.keys.each do |directory|
+      movie = Movie.new directory    
+      movie.status = handle_movie_directory movie if movie.is_movie?
+    end
+  end
+
 end

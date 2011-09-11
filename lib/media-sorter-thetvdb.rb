@@ -71,19 +71,14 @@ def thetvdb_get_show_episodes(show_id,show)
   cache = cache_dir + "/" + show_id + ".xml"
   
   if File.exists? cache and not $opt["tvdb-refresh"]
-    log("tvdb retrieving show episodes via cache: #{show} (#{show_id})")
+    log("tvdb retrieving show episodes via cache: #{show} (#{show_id})") if $opt["debug"]
     parser = XML::Parser.file cache
     doc = parser.parse
   else
-    log("tvdb retrieving show episodes via www: #{show} (#{show_id})")
+    log("tvdb retrieving show episodes via www: #{show} (#{show_id})") if $opt["debug"]
     url = $config["tvdb"]["mirror"] + '/api/' + $config["tvdb"]["api_key"] + '/series/' + show_id + '/all/en.xml'
     xml_data =  http_get(url)
-    #if ENV.has_key? "http_proxy"
-    #  xml_data = xml_get_via_proxy(url)
-    #else
-    #  xml_data = xml_get(url)      
-    #end
-    
+  
     parser = XML::Parser.string xml_data
     doc = parser.parse
     

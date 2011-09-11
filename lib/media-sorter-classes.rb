@@ -30,7 +30,7 @@ class Episode
   # renames the file name based on tvdb and other local criteria when writing to a filesystem.
   def fix_via_tvdb(episodes)
     re_cache = true
-    log("attempting to fix name based on tvdb") if $opt["debug"]
+    #log("attempting to fix name based on tvdb") if $opt["debug"]
     @name = episodes[@show][@season][@number] if episodes[@show][@season]
     ap episodes[@show] if $config["settings"]["log_level"] > 3 
     
@@ -121,6 +121,42 @@ class Movie
     name.gsub!(/\s+/,' ')
     name.gsub!(/\s?UNRATED$/i,'')
     name.gsub!(/\(\d\d\d\d\)/,"\1")
+    @name = name
+  end
+end
+
+# Music class, very simple for now. 
+class Music
+  attr_reader :name, :artist, :album, :enrich_status, :track_number, :disc_number, :file
+  attr_accessor :directory
+  attr_writer :name, :status, :artist, :album, :enrich_status, :track_number, :disc_number
+  
+  # initialize the object with some basic settings
+  def initialize(file)
+    @file = file
+    @original_file = file
+    @status, @enrich_status = false, false
+    @status = music_file File.basename file
+    
+    @name = clean_music_name name
+  end
+  
+  # return the status if the movie matches our expected syntax
+  def is_music?
+    @status
+  end
+ 
+  # returns all Movie class's
+  def self.find_all
+    ObjectSpace.each_object(Music)
+  end
+
+  def enrich
+    enrich_object(self)
+  end
+  
+  :private
+  def clean_music_name(name)
     @name = name
   end
 end

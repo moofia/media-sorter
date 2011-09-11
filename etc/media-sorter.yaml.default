@@ -33,6 +33,7 @@ settings:
   # no longer used, we test to see capabilities
   # file system is case sensitive or not
   # fs_case_sensitive: true
+
   
 tvdb:
   api_key: 31384A8E0F418F3B
@@ -86,12 +87,23 @@ movies_directory:
     - (.*)(\s|\.)R5                             # Movie.R5-fOBaR  
     - (.*)(\s|\.)HDDVDRip                       # Movie.HDDVDRip-fOBaR  
     - (.*)(\s|\.|\]|\[|\()DVDRip                # Movie.UNRATED.RERIP.DVDRip.XviD-fOBaR  
-    
+
+
 movies_file:
   media_extentions: avi,mkv,mpg,ogg,mpeg,mp4
   regex:
     - (.*)                                     # anything.avi  
-    
+
+
+music_file:
+  process: fasle
+  storage:
+      - /media/TERA/music
+  media_extentions: mp3
+  regex:
+    - (.*)                                     # anything.avi
+
+          
 http_rpc:
   update_library: false
   host: 192.168.0.17

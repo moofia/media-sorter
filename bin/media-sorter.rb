@@ -48,6 +48,8 @@ begin
     ["--tvdb",                        Getopt::BOOLEAN],
     ["--tvdb-refresh",                Getopt::BOOLEAN],
     ["--dry",                         Getopt::BOOLEAN],
+    ["--new",                         Getopt::BOOLEAN],
+    ["--verbose",                     Getopt::BOOLEAN],
     ["--find-missing",                Getopt::BOOLEAN],
     ["--prune-empty-directories",     Getopt::BOOLEAN],
     ["--dst",                         Getopt::OPTIONAL],
@@ -77,9 +79,9 @@ src            = $opt["src"] if $opt["src"]
 @movie_dir     = $config["settings"]["destination_movie_directory"]
 @movie_dir     = $opt["dst_movie"] if $opt["dst_movie"]
 
-#$options       = {:verbose=> true} 
 $options       = {} 
-$options       = {:noop=>true,:verbose=> true} if $opt["dry"]
+$options[:noop]    = true if $opt["dry"]
+$options[:verbose] = true if $opt["verbose"]
 $options       = $options
 @tvdb_episodes = {}
 $cache_state   = false
@@ -94,50 +96,21 @@ log("debug enabled",4)
 log("dry run enabled, no files will be renamed or moved") if $opt["dry"]
 
 # test to see if the filesystem is case sensitive or not for destination paths.
-fs_case_sensitivity_test @movie_dir if @movie_dir
-fs_case_sensitivity_test @tvdir if @tvdir
-fs_case_sensitivity_test @tvdir2 if @tvdir2
+fs_case_sensitivity_test
+
+# i dont like this here, move_file should be take this into account
+if @tvdir2
+  files_secondary = find_files(true,@tvdir2)
+  @is_on_secondary_storage = is_on_secondary_storage @tvdir2,files_secondary
+end
 
 # remove trailing / from bash_completion
 src = src.gsub(/\/$/,'')
-
-# movie mode
-if $opt["movie"]
-  log("movie mode")
-  get_directories(src).each do |directory|
-    next if directory =~ /\.nfo$/i
-    next if directory =~ /\/subs$/i
-    next if directory =~ /\.sample$/i
-    
-    log("found #{directory}",4)
-    movie = Movie.new directory    
-    movie.status = handle_movie_directory movie if movie.is_movie?    
-  end
-
-  # see which media files were found but failed to an episode that we expected 
-  @new_movie = false
-  
-  puts
-  Movie.find_all.each do |m|
-    log("error: not a recognized movie #{m.directory}") if not m.is_movie?
-    @new_movie = true if m.is_movie?
-  end
-  exit
-end
 
 # prune empty directories and exit
 if $opt["prune-empty-directories"]
   remove_empty_directories(src)
   exit
-end
-
-# find all files
-log("recursive src") if $opt["recursive"]
-files = find_files($opt["recursive"],src)
-
-if @tvdir2
-  files_secondary = find_files(true,@tvdir2)
-  @is_on_secondary_storage = is_on_secondary_storage @tvdir2,files_secondary
 end
 
 # find missing episodes. at the moment this must exist once completed
@@ -146,47 +119,21 @@ if $opt["find-missing"]
   exit
 end
 
-puts
-# loop through list of files looking for media, if its a tv episode proceed to 
-# move the file to the correct location, this includes renaming to correct syntax
-# if desired
-files.each do |file|
-  log("found #{file}",4)
-  episode = Episode.new file
-  episode.status = handle_series episode if episode.is_ep?  
+# first we process files in the current src   
+process_file(src)
+  
+get_directories(src).each do |directory|
+  media = ""
+  media = process_file(directory)
+  media = process_movie(directory) if media == ""
 end
 
-puts
 # remove empty directories, only in recursive mode
 if $config["settings"]["prune_empty_directories"] and $opt["recursive"]
   remove_empty_directories(src)
 end
 
-# show errors
-puts
-
-@errors.keys.each do |e|
-  log(e)
-end
-
-# see which media files were found but failed to an episode that we expected 
-@new_media = false
-directories = {}
-Episode.find_all.each do |e|
-  if not e.is_ep?
-    log("error: not a recognized episode #{e.file}") 
-    directories[File.dirname e.file] = true
-  end
-  @new_media = true if e.is_ep?
-end
-
-if directories.count > 0 and @movie_dir =~ /\w/
-  log("directories found that are not a tv series, movie_dir is set , checking for movies") 
-  directories.keys.each do |directory|
-    movie = Movie.new directory    
-    movie.status = handle_movie_directory movie if movie.is_movie?
-  end
-end
+display_errors
 
 if $config["http_rpc"]["update_library"]
   # scan for new content

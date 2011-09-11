@@ -24,7 +24,7 @@ def themoviedb_movie_search(name)
   log("themoviedb_movie_search: #{name}")
   
   # dont have a valid api key yet so just return true all the time.
-  #return true, name , "The Earth is caught in the middle of an intergalactic war between two races of robots,objects, including cars, trucks, planes and other technological creations."
+  return true, name , "The Earth is caught in the middle of an intergalactic war between two races of robots,objects, including cars, trucks, planes and other technological creations."
   
   state = false
   puts 
