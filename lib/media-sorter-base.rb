@@ -106,6 +106,7 @@ end
 
 # process movies to see what to do with it
 def process_movie(src)
+  return if @movie_dir !~ /w/
   return if src =~ /\.nfo$/i
   return if src =~ /\/subs$/i
   return if src =~ /\.sample$/i
@@ -338,7 +339,7 @@ end
 
 # call first for music to look and decide on what actions on will take with renaming or moving
 def handle_music(music)
-  return if $config['music_file']['process'] != true
+  return false if $config['music_file']['process'] != true
   log("handle_music -> do something with the music file #{music.file}")
   ap $config['music_file']['storage'] if $opt["debug"]
 end
@@ -347,7 +348,7 @@ end
 def handle_series(episode)
   tvdb_result = series_lookup(episode) if ($opt["tvdb"]) && (! @tvdb_episodes.has_key?(episode.show))
   if tvdb_result == false
-    handle_error("failed to find tvshow \'#{episode.show}\' from tvdb, skipping..")
+    handle_error("failed to find tvshow \'#{episode.show}\' from tvdb, skipping..") if $opt["debug"]
     return false
   end
   re_cache = episode.fix_via_tvdb @tvdb_episodes if $opt["tvdb"] and @tvdb_episodes.has_key?(episode.show)
@@ -586,7 +587,7 @@ def series_lookup(episode)
 end
 
 # handle the movie directory and decided what actions must be taken
-def handle_movie_directory(movie)
+def handle_movie_directory(movie)  
   log("handle_movie_directory: #{movie.directory}")
   files = find_files(false,movie.directory)
   status = true
@@ -686,7 +687,7 @@ def display_errors
     @new_media = true if e.is_ep?
   end
 
-  if directories.count > 0 and @movie_dir =~ /\w/
+  if directories.count > 1 and @movie_dir =~ /\w/
     log("directories found that are not a tv series, movie_dir is set , checking for movies") 
     directories.keys.each do |directory|
       movie = Movie.new directory    
