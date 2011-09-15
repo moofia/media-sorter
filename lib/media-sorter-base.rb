@@ -106,7 +106,7 @@ end
 
 # process movies to see what to do with it
 def process_movie(src)
-  return if @movie_dir !~ /w/
+  return if @movie_dir !~ /\w/
   return if src =~ /\.nfo$/i
   return if src =~ /\/subs$/i
   return if src =~ /\.sample$/i
@@ -633,7 +633,6 @@ def fs_case_sensitivity_test
   test_directory = "#{dst}/#{$$}"
     if File.directory? dst
       if not File.directory? test_directory
-        log("fs_case_sensitivity_test on #{dst}") if $opt["debug"]
         $options_fs = {}
         #$options_fs = {:noop=>true,:verbose=> true} if $opt["dry"]
         $options_fs = {:noop=>true} if $opt["dry"]
@@ -656,6 +655,8 @@ def fs_case_sensitivity_test
     
         $config["settings"]["fs_case_sensitive"] = true if count == 2
         $config["settings"]["fs_case_sensitive"] = false if count == 1      
+        log("fs_case_sensitivity_test on #{dst} (#{$config["settings"]["fs_case_sensitive"]})") if $opt["debug"]
+        
       end
     end  
   end
