@@ -2,7 +2,7 @@
 
 # first call for a lookup, only returns a new name of the movie and a status
 def themoviedb_lookup(movie)
-  log ("themoviedb_lookup: #{movie.name}")
+  log ("themoviedb_lookup: #{movie.name}") if $opt["debug"]
   state = false
   themoviedb_auth
   state, new_name, movie_full = themoviedb_movie_search movie.name
@@ -13,7 +13,7 @@ end
 
 # ? not sure if needed for readonly
 def themoviedb_auth
-  log("themoviedb_auth")
+  log("themoviedb_auth") if $opt["debug"]
 end
 
 # http://api.themoviedb.org/2.1/methods/Movie.search
@@ -21,7 +21,7 @@ end
 # The Movie.search method is the easiest and quickest way to search for a movie. 
 # It is a mandatory method in order to get the movie id to pass to (as an example) the Movie.getInfo method.
 def themoviedb_movie_search(name)
-  log("themoviedb_movie_search: #{name}")
+  log("themoviedb_movie_search: #{name}") if $opt["debug"]
   
   # dont have a valid api key yet so just return true all the time.
   return true, name , "The Earth is caught in the middle of an intergalactic war between two races of robots,objects, including cars, trucks, planes and other technological creations."
@@ -33,7 +33,7 @@ def themoviedb_movie_search(name)
   json_result = JSON.parse(result)
   state, movie_full = themoviedb_movie_search_parse_json(json_result)
   
-  log("themoviedb_movie_search: update object")
+  log("themoviedb_movie_search: update object") if $opt["debug"]
   
   new_name = name
   return state, new_name, movie_full
@@ -44,18 +44,18 @@ end
 # The Movie.getInfo method is used to retrieve specific information about a movie. 
 # Things like overview, release date, cast data, genre's, YouTube trailer link, etc...
 def themoviedb_movie_getInfo(name)
-  log("themoviedb_movie_getInfo: #{name}")
+  log("themoviedb_movie_getInfo: #{name}") if $opt["debug"]
 end
 
 # default data returned is json, parse it
 def themoviedb_movie_search_parse_json(json_data)
-  log("themoviedb_movie_search: json_data")
+  log("themoviedb_movie_search: json_data") if $opt["debug"]
   ap json_data if $opt["debug"]
   return true, "The Earth is caught in the middle of an intergalactic war between two races of robots,objects, including cars, trucks, planes and other technological creations."
 end
 
 def themoviedb_build_url(name,method)
-  log("themoviedb_build_url")
+  log("themoviedb_build_url") if $opt["debug"]
   name_escaped = CGI.escape(name)
   
   if method == "search"

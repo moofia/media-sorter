@@ -2,7 +2,8 @@
 settings:
   source_directory: /media/TERA/sort
   destination_directory: /media/TERA/tv
-  #destination_movie_directory: /media/TERA/movies/watch
+  destination_directory2: /media/TERA/tv2
+  destination_movie_directory: /media/TERA/movies/watch
 
   #dst_no_hierarchy: true
   # if log_directory not set defaults to install directory log
@@ -56,6 +57,10 @@ themoviedb:
 # $4 = number 2 (for 2 part episodes)
 # pattern order is critical as first matches
 series:
+  process: true
+  storage:
+      - /media/TERA/tv
+      - /media/TERA/tv2
   media_extentions: avi,mkv,mpg,ogg,mpeg,mp4
   regex:
     - (.*)\.s(\d+)e(\d+)e(\d+)                 # Tv.Show.S13E01E02.avi  
@@ -73,6 +78,9 @@ series:
 # matching a movie
 # at a later stage this can easily be collapsed into better regex
 movies_directory:
+  process: true
+  storage:
+      - /media/TERA/movies/watch
   regex:
     - (.*)(\s|\.)BluRay(\s|\.).*x264            # Movie.BluRay.x264-fOBaR  
     - (.*)(\s|\.)DVDRip(\s|\.).*XviD            # Movie.DVDRip.XviD-fOBaR  
@@ -81,6 +89,7 @@ movies_directory:
     - (.*)(\s|\.)DVDRip(\s|\.).*XviD            # Movie.DVDRip.XviD-fOBaR  
     - (.*)(\s|\.)R5(\s|\.).*XviD                # Movie.R5.XviD-fOBaR  
     - (.*)(\s|\.)R5(\s|\.).*XViD                # Movie.R5 LiNE READNFO XViD-fOBaR  
+    - (.*)(\s|\.)R6(\s|\.).*H264                # Movie.R6.LiNE.AC3.H264  
     - (.*)(\s|\.)XViD(\s|\.).*R5                # Movie.XViD R5-fOBaR  
     - (.*)(\s|\.)PPVRip(\s|\.).*(XviD|x264)?    # Movie.PPVRip.XviD-fOBaR  
     - (.*)(\s|\.)DVDSCR                         # Movie.DVDSCR-fOBaR  
@@ -88,12 +97,10 @@ movies_directory:
     - (.*)(\s|\.)HDDVDRip                       # Movie.HDDVDRip-fOBaR  
     - (.*)(\s|\.|\]|\[|\()DVDRip                # Movie.UNRATED.RERIP.DVDRip.XviD-fOBaR  
 
-
 movies_file:
   media_extentions: avi,mkv,mpg,ogg,mpeg,mp4
   regex:
     - (.*)                                     # anything.avi  
-
 
 music_file:
   process: fasle

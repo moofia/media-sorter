@@ -110,8 +110,10 @@ def process_movie(src)
   return if src =~ /\.nfo$/i
   return if src =~ /\/subs$/i
   return if src =~ /\.sample$/i
-  movie = Movie.new src    
-  movie.status = handle_movie_directory movie if movie.is_movie?
+  if $config["movies_directory"]["process"] == true
+    movie = Movie.new src    
+    movie.status = handle_movie_directory movie if movie.is_movie?
+  end
 end
 
 # process file to see what to do with it or what the directory might be
@@ -121,7 +123,7 @@ def process_file(src)
   get_files(src).each do |file|
     
     # first we check if the file is a tv series
-    episode_status, episode_name, episode_season, episode_episode = tv_file(file)
+    episode_status, episode_name, episode_season, episode_episode = tv_file(file) if $config["series"]["process"] == true
     if episode_status == true
       episode = Episode.new file
       if episode.is_ep?
@@ -131,7 +133,7 @@ def process_file(src)
     end
     
     # second we check if the file is music
-    music_status = music_file(file)
+    music_status = music_file(file) if $config["music_file"]["process"] == true
     if music_status == true
       music = Music.new file
       if music.is_music?
@@ -326,7 +328,7 @@ end
 
 # moves the directory to target location and creates directories if needed
 def move_directory(directory,target)
- log_new("move_directory: #{File.basename(directory)}")
+ log_new("move_directory -> #{File.basename(directory)}")
   
  if File.exists? "#{target}/#{File.basename(directory)}"
    log("warning dst directory exists: \'#{File.basename(directory)}\'")
@@ -573,7 +575,7 @@ end
 # wrapper method to decided which db to query
 def movie_lookup(movie)
   if $config.has_key? "themoviedb" and $config["themoviedb"].has_key? "api_key" and $config["themoviedb"].has_key? "base_url"
-    log("movie_lookup themoviedb: #{movie.name}")
+    log("movie_lookup themoviedb: #{movie.name}") if $opt["debug"]
     themoviedb_lookup movie
   end
 end
@@ -588,7 +590,7 @@ end
 
 # handle the movie directory and decided what actions must be taken
 def handle_movie_directory(movie)  
-  log("handle_movie_directory: #{movie.directory}")
+  log("handle_movie_directory: #{movie.directory}") if $opt["debug"]
   files = find_files(false,movie.directory)
   status = true
   files.each do |file|
