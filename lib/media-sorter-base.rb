@@ -474,9 +474,11 @@ end
 # returns a list of directories
 def get_directories(src)
   directories = Array.new
-  #return directories if not $opt["recursive"]
+  #return directories
   Find.find(src) do |path|
-    next if File.dirname(path) != src and not $opt["recursive"]
+    # not too sure what this was intended to do but its getting in the way
+    # and can not be matched correctly.
+    #next if File.dirname(path) != src 
     next if path == src
     next if not File.directory? path
     directories.push path
@@ -490,7 +492,7 @@ def remove_empty_directories(src)
   get_directories(src).each do |dir|
     tmp_dir = dir.gsub(/\[/,'\[')
     tmp_dir.gsub!(/\]/,'\]')
-  
+
     if Dir["#{tmp_dir}/*"].empty?
       log("cleanining up : #{src}") if not found
       
@@ -500,7 +502,7 @@ def remove_empty_directories(src)
       found = true
     end 
   end
-  
+
   get_directories(src).each do |dir|
     if not Dir["#{dir}/*"].empty? and $config["settings"]["log_level"] > 1
       log("unable to remove, directory not empty: #{dir}") 
@@ -669,7 +671,7 @@ def display_errors
   # see which media files were found but failed to an episode that we expected 
   @new_movie = false
   Movie.find_all.each do |m|
-    log("error: not a recognized movie #{m.directory}") if not m.is_movie?
+    log("error: not a recognized movie #{m.directory}") if not m.is_movie? if File.exists? m.directory
     @new_movie = true if m.is_movie?
   end
   # show errors
