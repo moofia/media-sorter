@@ -74,10 +74,21 @@ class Episode
     show.gsub!(/\s+$/,'')    
     $config_rename["rename"]["show"].keys.each {|s| show.gsub!(/^#{Regexp.escape(s)}$/i,$config_rename["rename"]["show"][s])}    
     show.gsub!(/(\s|\.)(\d\d\d\d)$/,' (\2)')
+
     show = show.downcase.titlecase
+    upcase_country(show)
     @show_on_fs = show.gsub(/\*/,'')
     show
   end
+  
+  def upcase_country(name)
+    # titlcase does not capitalize counties
+    if name =~ /\((\w\w)\)$/i
+      country = $1.upcase
+      name.gsub!(/\(\w\w\)$/,"(#{country})")
+    end
+  end
+  
 end
 
 # Movie class, very simple for now. 
