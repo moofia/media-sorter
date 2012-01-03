@@ -2,7 +2,7 @@
 settings:
   source_directory: /media/TERA/sort
   destination_directory: /media/TERA/tv
-  destination_directory2: /media/TERA/tv2
+  destination_directory2: /media/TERA2/tv
   destination_movie_directory: /media/TERA/movies/watch
 
   #dst_no_hierarchy: true
@@ -65,6 +65,7 @@ series:
   regex:
     - (.*)\.s(\d+)e(\d+)e(\d+)                 # Tv.Show.S13E01E02.avi  
     - (.*)\s-\s(\d+)x(\d+)\s-\s                # Tv Show - 1x13 - episode.avi
+    - (.*)\.(\d+)x(\d+)\..*                    # Tv Show.1x13.episode.avi
     - (.*)\s-\ss(\d+)e(\d+)\s-\s               # Tv Show - S07E01 - episode.avi
     - (.*)\.s(\d+)e(\d+)\..*                   # tv.show.s01e03.episode.avi
     - (.*)\.s(\d+)e(\d+)                       # tv.show.S06E01.avi
@@ -72,9 +73,11 @@ series:
     - (.*)\s\[(\d+)x(\d+)\]                    # Tv [4x14].avi
     - (.*)\s\[(\d+)x(\d+)\.\d+x(\d+)\]\s       # Tv Show [6x16.6x17] episode.avi
     - (.*)\s\[(\d+)x(\d+)\-(\d+)\]\s           # Tv Show [6x16-17] episode.avi
+    - (.*)\s\[(\d+)x(\d+)\.(\d+)\]\s           # Tv Show [6x16.17] episode.avi
     - (.*)\ss(\d+)e(\d)+\s                     # Tv Show S01E01 episode.avi
     - (.*)\.(s+\d+)e(\d+)-e\d+\..*             # Show.S10E17-E18.episode.avi
     - (.*)\.(\d)(\d\d)\..*                     # tv.show.114.avi
+    - (.*)\-\s(\d)(\d\d)\s\-.*                 # tv.show - 114 - foo.avi
 
 # matching a movie
 # at a later stage this can easily be collapsed into better regex
