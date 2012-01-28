@@ -115,6 +115,7 @@ end
 
 # find missing episodes. at the moment this must exist once completed
 if $opt["find-missing"]
+  files = find_files(true,src)
   find_missing(files) 
   exit
 end
