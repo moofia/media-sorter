@@ -33,7 +33,7 @@ class Episode
     #log("attempting to fix name based on tvdb") if $opt["debug"]
     @name = episodes[@show][@season][@number] if episodes[@show][@season]
     ap episodes[@show] if $config["settings"]["log_level"] > 3 
-    
+
     if not @name.nil? and @name != ""
       re_cache = false
       @name = CGI.unescapeHTML(@name)
@@ -78,6 +78,7 @@ class Episode
     show = show.downcase.titlecase
     upcase_country(show)
     @show_on_fs = show.gsub(/\*/,'')
+    @show_on_fs.gsub!(/\?/,'')
     show
   end
   
