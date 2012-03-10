@@ -97,7 +97,7 @@ def tv_file(file)
       name    = $1 if $1
       season  = $2 if $2
       episode = $3 if $3
-      episode = "#{$3}x#{$4}" if $3 and $4 =~ /\d/      
+      episode = "#{$3}x#{$4}" if $3 and $4 =~ /^\d/      
       return true, name, season, episode
     end
   end

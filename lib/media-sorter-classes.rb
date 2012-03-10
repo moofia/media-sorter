@@ -30,7 +30,7 @@ class Episode
   # renames the file name based on tvdb and other local criteria when writing to a filesystem.
   def fix_via_tvdb(episodes)
     re_cache = true
-    #log("attempting to fix name based on tvdb") if $opt["debug"]
+    log("attempting to fix name based on tvdb") if $config["settings"]["log_level"] > 4
     @name = episodes[@show][@season][@number] if episodes[@show][@season]
     ap episodes[@show] if $config["settings"]["log_level"] > 3 
 
