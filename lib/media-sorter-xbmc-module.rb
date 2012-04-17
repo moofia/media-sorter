@@ -82,7 +82,7 @@ module XBMC
   end
   
   def XBMC.scan_for_content
-    rpc_action("VideoLibrary.ScanForContent")
+    rpc_action("VideoLibrary.Scan")
   end
   
   def XBMC.version
