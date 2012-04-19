@@ -51,11 +51,11 @@ class Episode
 
       #FileUtils.mv(orig,@file,$options) if orig.downcase != @file.downcase
       if orig != @file and $config["settings"]["fs_case_sensitive"] == true
-        log "fix_via_tvdb: #{orig} to #{@file}"        
+        log "fix_via_tvdb: #{orig} to #{@file}" if $config["settings"]["log_level"] > 1        
         FileUtils.mv(orig,@file,$options) 
         @original_file = @file
       elsif orig.downcase != @file.downcase
-        log "fix_via_tvdb: #{orig} to #{@file}"
+        log "fix_via_tvdb: #{orig} to #{@file}" if $config["settings"]["log_level"] > 1
         FileUtils.mv(orig,@file,$options) 
         @original_file = @file
       end
