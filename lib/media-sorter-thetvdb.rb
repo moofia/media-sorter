@@ -20,7 +20,7 @@ def thetvdb_get_show_id(show)
     parser = XML::Parser.file cache
     doc = parser.parse
   else
-    log("tvdb retrieving show id via www: #{show}")
+    log("tvdb retrieving show id via www: #{show}") if $config["settings"]["log_level"] > 1
     show_escaped = CGI.escape(show)
     url = $config["tvdb"]["mirror"] + '/api/GetSeries.php?&language=en&seriesname=' + show_escaped
     xml_data =  http_get(url)
@@ -71,11 +71,11 @@ def thetvdb_get_show_episodes(show_id,show)
   cache = cache_dir + "/" + show_id + ".xml"
   
   if File.exists? cache and not $opt["tvdb-refresh"]
-    log("tvdb retrieving show episodes via cache: #{show} (#{show_id})") if $opt["debug"]
+    log("tvdb retrieving show episodes via cache: #{show} (#{show_id})") if $config["settings"]["log_level"] > 1
     parser = XML::Parser.file cache
     doc = parser.parse
   else
-    log("tvdb retrieving show episodes via www: #{show} (#{show_id})") if $opt["debug"]
+    log("tvdb retrieving show episodes via www: #{show} (#{show_id})") if $config["settings"]["log_level"] > 1
     url = $config["tvdb"]["mirror"] + '/api/' + $config["tvdb"]["api_key"] + '/series/' + show_id + '/all/en.xml'
     xml_data =  http_get(url)
   
