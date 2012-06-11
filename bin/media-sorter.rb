@@ -129,7 +129,7 @@ get_directories(src).each do |directory|
   media = process_movie(directory) if media == ""
 end
 
-# remove empty directories, only in recursive mode
+# remove empty directories
 if $config["settings"]["prune_empty_directories"]
   remove_empty_directories(src)
 end

@@ -288,6 +288,16 @@ def move_file(f,target)
    end
  end
  
+ $config["series"]["media_extentions"].split(/,/).each do |ext|
+   file_target = File.basename(f).gsub(/.\w\w\w$/,'') + "." + ext
+   if File.exists? "#{target}/#{file_target}"
+     msg = "#{@script} -> current file exist with another extention: \'#{File.basename(f) }\' remove new copy ? [y/n] "
+     prompt(f,"delete",msg)
+     return 2
+   end
+   
+ end
+ 
  if File.exists? "#{target}/#{File.basename(f)}"
    log("warning dst file exists: \'#{File.basename(f)}\'",2) if $config["settings"]["log_level"] > 2
    if stats["src_size"] == stats["dst_size"] and $config["settings"]["prompt_prune_duplicates"] and f != target_file
@@ -461,6 +471,20 @@ def remove_arb_dot_files(src)
 
 end
 
+# clean up unwanted files that get in the way
+def clean_arb_dot_files(src)
+  clean_list = $config["clean"]["remove_extentions"].split(/,/)
+
+  Find.find(src) do |path|
+    next if File.basename(path) =~ /^\._/
+    clean_list.each do |ext|
+      next if path !~ /\.#{ext}/
+      FileUtils.rm(path,$options) if File.exists? path
+    end
+
+  end
+end
+
 # returns a list of files
 def get_files(src)
   files = Array.new
@@ -492,6 +516,8 @@ def remove_empty_directories(src)
   get_directories(src).each do |dir|
     tmp_dir = dir.gsub(/\[/,'\[')
     tmp_dir.gsub!(/\]/,'\]')
+
+    clean_arb_dot_files(dir) if $config["clean"]["process"] == true
 
     if Dir["#{tmp_dir}/*"].empty?
       log("cleanining up : #{src}") if not found
