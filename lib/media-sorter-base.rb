@@ -121,6 +121,7 @@ def process_file(src)
   media = ""
   # files first
   get_files(src).each do |file|
+    next if file =~ /\/\._/
     
     # first we check if the file is a tv series
     episode_status, episode_name, episode_season, episode_episode = tv_file(file) if $config["series"]["process"] == true
