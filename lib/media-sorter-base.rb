@@ -35,6 +35,7 @@ def prompt(file,action,msg)
     @script = File.basename $0 
     msg.gsub!(/#{@script} -> /,'')
     msg.gsub!(/remove new .*\[y\/n\]/,'autoremove occuring')
+    msg.gsub!(/remove dup .*\[y\/n\]/,'autoremove occuring')
     log msg
     FileUtils.rm(file,$options) if action == "delete"
   end
@@ -292,9 +293,23 @@ def move_file(f,target)
  $config["series"]["media_extentions"].split(/,/).each do |ext|
    file_target = File.basename(f).gsub(/.\w\w\w$/,'') + "." + ext
    if File.exists? "#{target}/#{file_target}"
-     msg = "#{@script} -> current file exist with another extention: \'#{File.basename(f) }\' remove new copy ? [y/n] "
-     prompt(f,"delete",msg)
-     return 2
+     # choose which file to delete, we keep in order of the list
+     order_target = 1
+     order_new = 1
+     count = 1
+     $config["series"]["duplicate_priority"].split(/,/).each do |keep_ext|
+       order_target = count if File.extname(file_target) =~ /#{keep_ext}/ 
+       order_new = count if File.extname(f) =~ /#{keep_ext}/ 
+       count = count + 1
+     end
+     delete_file = f
+     delete_file = "#{target}/#{file_target}" if order_new < order_target
+     if order_new != order_target
+       msg = "#{@script} -> current file exist with another extention: \'#{File.basename(delete_file) }\' remove dup copy ? [y/n] "
+       prompt(delete_file,"delete",msg)
+     else
+       return 2
+     end
    end
    
  end
