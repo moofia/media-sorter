@@ -307,7 +307,6 @@ def move_file(f,target)
      if order_new != order_target
        msg = "#{@script} -> current file exist with another extention: \'#{File.basename(delete_file) }\' remove dup copy ? [y/n] "
        prompt(delete_file,"delete",msg)
-     else
        return 2
      end
    end
