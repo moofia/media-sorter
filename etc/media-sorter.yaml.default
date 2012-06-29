@@ -62,8 +62,7 @@ series:
       - /media/TERA/tv
       - /media/TERA/tv2
   media_extentions: avi,mkv,mpg,ogg,mpeg,mp4
-  duplicate_priority: mp4,avi,mkv,mpg
-  # s06e04.TheBox.Hannibal.avi
+  duplicate_priority: mkv,mp4,avi,mpg
   regex:
     - (.*)\.s(\d+)e(\d+)e(\d+)                 # Tv.Show.S13E01E02.avi  
     - (.*)\s-\s(\d+)x(\d+)\s-\s                # Tv Show - 1x13 - episode.avi
