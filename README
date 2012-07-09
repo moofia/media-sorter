@@ -1,11 +1,16 @@
 
-dependancies:
+mac os install:
 
+Xcode
+Macports
+
+port install git-core
+port install libxml2
 gem install awesome_print
-gem install titlecase
 gem install getopt
+gem install libxml-ruby
+gem install titclecase
 gem install json
-
 
 
 usage: media-sorter.rb --src [src dir] --dst [destination dir] --debug
