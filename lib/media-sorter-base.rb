@@ -485,7 +485,7 @@ def remove_arb_dot_files(src)
 
 end
 
-# clean up unwanted files that get in the way
+# clean up unwanted files that get in the way based on extension
 def clean_arb_dot_files(src)
   clean_list = $config["clean"]["remove_extentions"].split(/,/)
 
@@ -493,6 +493,20 @@ def clean_arb_dot_files(src)
     next if File.basename(path) =~ /^\._/
     clean_list.each do |ext|
       next if path !~ /\.#{ext}/
+      FileUtils.rm(path,$options) if File.exists? path
+    end
+
+  end
+end
+
+# clean up unwanted files that get in the way based on name
+def clean_arb_named_files(src)
+  clean_list = $config["clean"]["remove_named"].split(/,/)
+
+  Find.find(src) do |path|
+    next if File.basename(path) =~ /^\._/
+    clean_list.each do |name|
+      next if path !~ /#{name}\./
       FileUtils.rm(path,$options) if File.exists? path
     end
 
@@ -532,6 +546,7 @@ def remove_empty_directories(src)
     tmp_dir.gsub!(/\]/,'\]')
 
     clean_arb_dot_files(dir) if $config["clean"]["process"] == true
+    clean_arb_named_files(dir) if $config["clean"]["process"] == true
 
     if Dir["#{tmp_dir}/*"].empty?
       log("cleanining up : #{src}") if not found
