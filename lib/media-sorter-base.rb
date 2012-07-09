@@ -255,100 +255,100 @@ end
 
 # moves the file to target location and creates directories if needed
 def move_file(f,target)
- log_new("move_file -> #{File.basename(f) }")
+  # do nothing if the file does not exist, this can occur
+  return 2 if not File.exists? f
+  log_new("move_file -> #{File.basename(f) }")
+ 
+  # if the show is stored on the secondary storage device swap out the primary for the secondary in 
+  # the target.
+  if @tvdir2
+    show = target.gsub(/\/\//,'/').gsub(/#{@tvdir}/,'')
+    show = "/#{show}" if show !~ /^\//
+    show = File.dirname(show).split(/\//)[1]
+    if @is_on_secondary_storage.has_key? show
+      target.gsub!(/#{@tvdir}/,@tvdir2)
+    end
+  end
   
- #if not File.exists? f 
- #   log "error: source file does not exist! \"#{f}\""
- #   exit 2
- #end
+  target_file = target + "/" + File.basename(f)   
+  stats = {}
+  stats["src_size"] = ( not File.size?(f).nil?) ? File.size?(f) : 0
+  stats["dst_size"] = ( not File.size?(target_file).nil? ) ? File.size?(target_file) : 0
+  if File.exists? f 
+    if stats["src_size"] == 0 
+      msg = "#{@script} -> src file zero bytes: \'#{File.basename(f) }\' remove new file ? [y/n] "
+      prompt(f,"delete",msg)
+      return 2
+    end
+    if stats["src_size"] < 100000000 and $config["settings"]["prune_small"]
+      msg = "#{@script} -> src file less than 100M: \'#{File.basename(f) }\' remove new file ? [y/n] "
+      prompt(f,"delete", msg)
+      return 2
+    end
+  end
  
- # if the show is stored on the secondary storage device swap out the primary for the secondary in 
- # the target.
- if @tvdir2
-   show = target.gsub(/\/\//,'/').gsub(/#{@tvdir}/,'')
-   show = "/#{show}" if show !~ /^\//
-   show = File.dirname(show).split(/\//)[1]
-   if @is_on_secondary_storage.has_key? show
-     target.gsub!(/#{@tvdir}/,@tvdir2)
-   end
- end
- 
- target_file = target + "/" + File.basename(f)   
- stats = {}
- stats["src_size"] = ( not File.size?(f).nil?) ? File.size?(f) : 0
- stats["dst_size"] = ( not File.size?(target_file).nil? ) ? File.size?(target_file) : 0
- if File.exists? f 
-   if stats["src_size"] == 0 
-     msg = "#{@script} -> src file zero bytes: \'#{File.basename(f) }\' remove new file ? [y/n] "
-     prompt(f,"delete",msg)
-     return 2
-   end
-   if stats["src_size"] < 100000000 and $config["settings"]["prune_small"]
-     msg = "#{@script} -> src file less than 100M: \'#{File.basename(f) }\' remove new file ? [y/n] "
-     prompt(f,"delete", msg)
-     return 2
-   end
- end
- 
- $config["series"]["media_extentions"].split(/,/).each do |ext|
-   file_target = File.basename(f).gsub(/.\w\w\w$/,'') + "." + ext
-   if File.exists? "#{target}/#{file_target}"
-     # choose which file to delete, we keep in order of the list
-     order_target = 1
-     order_new = 1
-     count = 1
-     $config["series"]["duplicate_priority"].split(/,/).each do |keep_ext|
-       order_target = count if File.extname(file_target) =~ /#{keep_ext}/ 
-       order_new = count if File.extname(f) =~ /#{keep_ext}/ 
-       count = count + 1
-     end
-     delete_file = f
-     delete_file = "#{target}/#{file_target}" if order_new < order_target
-     if order_new != order_target
-       msg = "#{@script} -> current file exist with another extention: \'#{File.basename(delete_file) }\' remove dup copy ? [y/n] "
-       prompt(delete_file,"delete",msg)
-       return 2
-     end
-   end
+  $config["series"]["media_extentions"].split(/,/).each do |ext|
+    file_target = File.basename(f).gsub(/.\w\w\w$/,'') + "." + ext
+    if File.exists? "#{target}/#{file_target}"
+      # choose which file to delete, we keep in order of the list
+      order_target = 1
+      order_new = 1
+      count = 1
+      $config["series"]["duplicate_priority"].split(/,/).each do |keep_ext|
+        order_target = count if File.extname(file_target) =~ /#{keep_ext}/ 
+        order_new = count if File.extname(f) =~ /#{keep_ext}/ 
+        count = count + 1
+      end
+      delete_file = f
+      delete_file = "#{target}/#{file_target}" if order_new < order_target
+      if order_new != order_target
+        msg = "#{@script} -> current file exist with another extention: \'#{File.basename(delete_file) }\' remove dup copy ? [y/n] "
+        prompt(delete_file,"delete",msg)
+        return 2
+      end
+    end
+    
+  end
+  
+  if File.exists? "#{target}/#{File.basename(f)}"
+    log("warning dst file exists: \'#{File.basename(f)}\'",2) if $config["settings"]["log_level"] > 2
+    if stats["src_size"] == stats["dst_size"] and $config["settings"]["prompt_prune_duplicates"] and f != target_file
+      msg = "#{@script} -> duplicate equal size: \'#{File.basename(f) }\' remove new copy ? [y/n] "
+      prompt(f,"delete",msg)
+      return 2
+    elsif stats["src_size"] != stats["dst_size"] and f != target_file
+      msg = "duplicate: src \'#{f}\' (#{stats["src_size"]}) -> dst \'#{target_file}\' (#{stats["dst_size"]}) fix manually"
+      #prompt(f,"delete",msg)
+      log msg
+    else
+      log "warning src and dst equal for '#{File.basename(f)}\' with auto pruning enabled we choose to do nothing"
+    end
+    
+    if $config["settings"]["log_level"] > 2
+      if stats["src_size"] == stats["dst_size"]
+        log "warning duplicate equal size: src \'#{f}\' -> dst \'#{target_file}\'"
+        # should be safe to save some time here and prompt to ask if one wishes to remove src file
+      else
+        log "warning duplicate: src \'#{f}\' (#{stats["src_size"]}) -> dst \'#{target_file}\' (#{stats["dst_size"]})"
+      end
+    end
+    return 2
+  end
+  
+  is_space = ensure_free_space f, target
+  
+  if is_space 
+    # if the directory does not exist it is created
+    FileUtils.mkdir_p(target,$options) if not File.directory? target
+    ap 'this should be here'
+    `read`
+    FileUtils.mv(f,target,$options) if ( (File.dirname f) != target.gsub(/\/$/,''))
    
- end
- 
- if File.exists? "#{target}/#{File.basename(f)}"
-   log("warning dst file exists: \'#{File.basename(f)}\'",2) if $config["settings"]["log_level"] > 2
-   if stats["src_size"] == stats["dst_size"] and $config["settings"]["prompt_prune_duplicates"] and f != target_file
-     msg = "#{@script} -> duplicate equal size: \'#{File.basename(f) }\' remove new copy ? [y/n] "
-     prompt(f,"delete",msg)
-     return 2
-   elsif stats["src_size"] != stats["dst_size"] and f != target_file
-     msg = "duplicate: src \'#{f}\' (#{stats["src_size"]}) -> dst \'#{target_file}\' (#{stats["dst_size"]}) fix manually"
-     #prompt(f,"delete",msg)
-     log msg
-   else
-     log "warning src and dst equal for '#{File.basename(f)}\' with auto pruning enabled we choose to do nothing"
-   end
-   
-   if $config["settings"]["log_level"] > 2
-     if stats["src_size"] == stats["dst_size"]
-       log "warning duplicate equal size: src \'#{f}\' -> dst \'#{target_file}\'"
-       # should be safe to save some time here and prompt to ask if one wishes to remove src file
-     else
-       log "warning duplicate: src \'#{f}\' (#{stats["src_size"]}) -> dst \'#{target_file}\' (#{stats["dst_size"]})"
-     end
-   end
-   return 2
- end
- 
- is_space = ensure_free_space f, target
- 
- if is_space 
-   # if the directory does not exist it is created
-   FileUtils.mkdir_p(target,$options) if not File.directory? target
-   FileUtils.mv(f,target,$options) if ( (File.dirname f) != target.gsub(/\/$/,'')) 
- else
-   log("error not enough free space on \"#{target}\"")
- end
- 
- 1
+  else
+    log("error not enough free space on \"#{target}\"")
+  end
+  
+  1
 end
 
 # moves the directory to target location and creates directories if needed
