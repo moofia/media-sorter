@@ -340,10 +340,7 @@ def move_file(f,target)
   if is_space 
     # if the directory does not exist it is created
     FileUtils.mkdir_p(target,$options) if not File.directory? target
-    ap 'this should be here'
-    `read`
     FileUtils.mv(f,target,$options) if ( (File.dirname f) != target.gsub(/\/$/,''))
-   
   else
     log("error not enough free space on \"#{target}\"")
   end
