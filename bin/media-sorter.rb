@@ -157,15 +157,13 @@ if $config["http_rpc"]["update_library"]
   # scan for new content
   ap XBMC.scan_for_content if @new_media
 
-  #print "#{@script} -> press enter to continue "
-  #STDIN.gets
+  print "#{@script} -> press enter to continue "
+  STDIN.gets
   
-  #results = XBMC.get_recently_added_episodes
-  #puts
-  #results["result"]["episodes"].each do |e|
-  #  ep = e["file"].split('/')
-  #  puts ep[ep.length - 1]
-  #end
+  results = XBMC.get_recently_added_episodes
+  results["result"]["episodes"].each do |e|
+    puts "#{e["showtitle"]} - #{e["label"]}"
+  end
 
 end
 

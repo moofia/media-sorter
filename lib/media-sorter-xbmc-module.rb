@@ -47,11 +47,16 @@ module XBMC
   end
   
   # method to make the connection to the server and display the raw results
-  def XBMC.rpc_action(method)
+  def XBMC.rpc_action(method,params=nil)
+    extra_params = ""
+    if params =~ /\s/
+      extra_params = ",#{params}"
+    end
     log "#{@log_base} #{method}"
     json = <<-JSON
-      {"jsonrpc":"2.0","method":"#{method}","id":1}
+      {"jsonrpc":"2.0","method":"#{method}","id":1#{extra_params}}
     JSON
+
     server = XBMCrpc.new
     response = server.post(json)
     result = JSON.parse(response.body)
@@ -78,7 +83,10 @@ module XBMC
   end
   
   def XBMC.get_recently_added_episodes
-    rpc_action("VideoLibrary.GetRecentlyAddedEpisodes")
+    #{"jsonrpc": "2.0", "method": "VideoLibrary.GetRecentlyAddedEpisodes", "id": "1", 
+    #"params" : { "limits": { "start": 0, "end": 1 },"properties": [ "title", "showtitle", "tvshowid" ] }
+    #}
+    rpc_action("VideoLibrary.GetRecentlyAddedEpisodes",'"params" : { "limits": { "start": 0, "end": 20 },"properties": [ "title", "showtitle", "tvshowid" ] }')
   end
   
   def XBMC.scan_for_content
