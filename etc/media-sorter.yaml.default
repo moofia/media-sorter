@@ -1,9 +1,9 @@
 ---
 settings:
-  #source_directory: /media/TERA/sort
-  #destination_directory: /media/TERA/tv
-  #destination_directory2: /media/TERA2/tv
-  #destination_movie_directory: /media/TERA/movies/watch
+  source_directory: /media/TERA/sort
+  destination_directory: /media/TERA/tv
+  destination_directory2: /media/TERA2/tv
+  destination_movie_directory: /media/TERA/movies/watch
 
   #dst_no_hierarchy: true
   # if log_directory not set defaults to install directory log
