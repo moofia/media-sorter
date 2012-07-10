@@ -18,19 +18,24 @@ def thetvdb_get_show_id(show)
   cache = cache_dir + "/" + show + ".xml"
   if File.exists? cache and not $opt["tvdb-refresh"]
     parser = XML::Parser.file cache
-    doc = parser.parse
+    begin
+      doc = parser.parse
+    rescue => err
+      log("tvdb error: #{err} when retrieving \'#{show}\'")
+      return 
+    end
   else
     log("tvdb retrieving show id via www: #{show}") if $config["settings"]["log_level"] > 1
     show_escaped = CGI.escape(show)
     url = $config["tvdb"]["mirror"] + '/api/GetSeries.php?&language=en&seriesname=' + show_escaped
     xml_data =  http_get(url)
-    #if ENV.has_key? "http_proxy"
-    #  xml_data = xml_get_via_proxy(url)
-    #else
-    #  xml_data = xml_get(url)      
-    #end
     parser = XML::Parser.string xml_data
-    doc = parser.parse
+    begin
+      doc = parser.parse
+    rescue => err
+      log("tvdb error: #{err} when retrieving \'#{show}\'")
+      return 
+    end
     File.open(cache, 'w') do |file| 
       xml_data.each {|x| file.puts x}
     end
