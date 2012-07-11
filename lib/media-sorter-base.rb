@@ -461,12 +461,13 @@ debug "forced exit, refactor first"
 end
 
 # when trying to remove directories there are varies odd dot files that can be 
-# removed
+# removed and other annyonging files
 def remove_arb_dot_files(src)
   dot_files = Array.new
   dot_files << "DS_Store"
   dot_files << "_.DS_Store"
   dot_files << "com.apple.timemachine.supported"
+  dot_files << "Thumbs.db"
   
   dot_files.each do |file|
     dot_file_remove = "#{src}/.#{file}"
