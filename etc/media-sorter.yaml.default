@@ -63,6 +63,7 @@ series:
       - /media/TERA/tv2
   media_extentions: avi,mkv,mpg,ogg,mpeg,mp4
   duplicate_priority: mp4,avi,mkv,mpg
+  #Desperate Housewives - [01x01] - Pilot.avi
   regex:
     - (.*)\.s(\d+)e(\d+)e(\d+)                 # Tv.Show.S13E01E02.avi  
     - (.*)\s-\s(\d+)x(\d+)\s-\s                # Tv Show - 1x13 - episode.avi
@@ -71,6 +72,7 @@ series:
     - (.*)\s-\ss(\d+)e(\d+)\s-\s               # Tv Show - S07E01 - episode.avi
     - (.*)\.s(\d+)e(\d+)\..*                   # tv.show.s01e03.episode.avi
     - (.*)\.?\s?s(\d+)e(\d+)                   # tv.show.S06E01.avi
+    - (.*)\s\-\s\[(\d+)x(\d+)\]\s\-\s          # Tv - [4x14] - episode.avi
     - (.*)\s\[(\d+)x(\d+)\]\s                  # Tv [4x14] episode.avi
     - (.*)\s\[(\d+)x(\d+)\]                    # Tv [4x14].avi
     - (.*)\s\[(\d+)x(\d+)\.\d+x(\d+)\]\s       # Tv Show [6x16.6x17] episode.avi
