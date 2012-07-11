@@ -121,46 +121,48 @@ end
 # this is only done for tv series if a single episode is found in the volume
 def handle_rar(rar)
   if File.exists? rar
-    log("handle_rar") if $opt["debug"]
-    file = rar
+    log("handle_rar #{rar}") if $opt["debug"]
+    directory = File.dirname(rar)
     ext_list = $config["series"]["media_extentions"].split(/,/).map.join("|")
-    unrar_list = %x[unrar l #{file}]
-    count = 0
-    unrar_list_file = ""
-    unrar_list.each do |line|
-      if line =~ /(.*)(#{ext_list})\s+\d+\w\d+/
-        count = count + 1
-        unrar_list_file = line
+    episode_status, episode_name, episode_season, episode_episode = tv_file(File.basename(directory) + ".avi")
+    if episode_status
+      unrar_list = %x[unrar l #{rar}]
+      count = 0
+      unrar_list_file = ""
+      unrar_list.each do |line|
+        if line =~ /(.*)(#{ext_list})\s+\d+\w\d+/
+          count = count + 1
+          unrar_list_file = line
+        end
+      unrar_list_file = "" if count > 1  
       end
-    unrar_list_file = "" if count > 1  
-    end
-    
-    if unrar_list_file =~ /(.*)(#{ext_list})\s+\d+\w\d+/
-      name = $1
-      ext = $2
-      if name =~ /\w+/ and ext =~ /#{ext_list}/
-        target_file = name.gsub(/^\s+/,'') + ext
-        directory = File.dirname(rar)
-        media_file = directory + "/" + target_file
-
-        episode_status, episode_name, episode_season, episode_episode = tv_file(target_file) if $config["series"]["process"] == true
-        if episode_status and not File.exist? media_file
-          system("#{$config["settings"]["unrar_location"]}", "e", rar, "#{directory}")
-          
-          if File.exist? media_file
-            if episode_status == true
-              episode = Episode.new media_file
-              if episode.is_ep?
-                episode.status = handle_series episode 
-                media = episode.class.to_s
+      
+      if unrar_list_file =~ /(.*)(#{ext_list})\s+\d+\w\d+/
+        name = $1
+        ext = $2
+        if name =~ /\w+/ and ext =~ /#{ext_list}/
+          target_file = name.gsub(/^\s+/,'') + ext
+          media_file = directory + "/" + target_file
+      
+          episode_status, episode_name, episode_season, episode_episode = tv_file(target_file) if $config["series"]["process"] == true
+          if episode_status and not File.exist? media_file
+            system("#{$config["settings"]["unrar_location"]}", "e", rar, "#{directory}")
+            
+            if File.exist? media_file
+              if episode_status == true
+                episode = Episode.new media_file
+                if episode.is_ep?
+                  episode.status = handle_series episode 
+                  media = episode.class.to_s
+                end
               end
             end
+            
+            FileUtils.rm_r(directory,$options)
           end
-          
-          FileUtils.rm_r(directory,$options)
         end
-      end
-    end   
+      end   
+    end
   end
 end
 
@@ -192,7 +194,8 @@ def process_file(src)
     end
     
     # finally we can handle rar's
-    handle_rar(file) if file =~ /\.rar$/
+    handle_rar(file) if file =~ /\.rar$/ and file !~ /part\d+\.rar$/
+    handle_rar(file) if file =~ /part01\.rar$/
     
   end # get_files
   media
