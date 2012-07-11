@@ -114,6 +114,7 @@ log("dry run enabled, no files will be renamed or moved") if $opt["dry"]
 
 # test to see if the filesystem is case sensitive or not for destination paths.
 fs_case_sensitivity_test
+unrar_found_test
 
 # i dont like this here, move_file should be take this into account
 if @tvdir2
