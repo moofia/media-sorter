@@ -6,6 +6,7 @@ Macports
 
 port install git-core
 port install libxml2
+port install unrar
 gem install awesome_print
 gem install getopt
 gem install libxml-ruby
@@ -14,6 +15,7 @@ gem install json
 
 ubuntu install:
 
+apt-get install unrar
 apt-get install git-core
 apt-get install libxml2
 apt-get install ruby1.9.1
