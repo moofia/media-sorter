@@ -12,6 +12,22 @@ gem install libxml-ruby
 gem install titclecase
 gem install json
 
+ubuntu install:
+
+apt-get install git-core
+apt-get install libxml2
+apt-get install ruby1.9.1
+apt-get install ruby1.9.1-dev
+apt-get install libxml2-dev
+apt-get install libxslt1-dev
+apt-get install zlib1g-dev
+gem install awesome_print
+gem install getopt
+gem install libxml-ruby
+gem install titclecase
+gem install json
+
+
 
 usage: media-sorter.rb --src [src dir] --dst [destination dir] --debug
 
