@@ -146,7 +146,22 @@ def handle_rar(rar)
       
           episode_status, episode_name, episode_season, episode_episode = tv_file(target_file) if $config["series"]["process"] == true
           if episode_status and not File.exist? media_file
-            system("#{$config["settings"]["unrar_location"]}", "e", rar, "#{directory}")
+            command = "#{$config["settings"]["unrar_location"]} e #{rar} #{directory}"
+            log("unrar #{target_file}")
+            begin
+              PTY.spawn(command) do |r, w, pid|
+                begin
+                  r.each do |line|
+                  if line =~ /#{target_file}\s+(.*)/
+                    puts $1
+                  end
+               end
+               rescue Errno::EIO
+               end
+            end
+            rescue PTY::ChildExited => e
+              log("The child process exited!")
+            end
             
             if File.exist? media_file
               if episode_status == true

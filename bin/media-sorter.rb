@@ -19,6 +19,8 @@ require 'cgi'
 require 'yaml'
 require 'titlecase'
 require 'json'
+require 'pty'
+
 
 $script_dir = File.expand_path($0).gsub(/\/bin\/.*/,'')
 
