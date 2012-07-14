@@ -513,15 +513,15 @@ debug "forced exit, refactor first"
   eps.keys.each do |show|
     eps[show].keys.each do |season|
       next if season == "tvdb_find_missing"
-      max = eps[show][season].max[0]
+      max = eps[show][season].max_by{|k,v| v}[0].to_i
+
       if eps[show].has_key? "tvdb_find_missing"
         max = eps[show]["tvdb"][season]["max"] if eps[show]["tvdb"].has_key? season
       end
 
-     # max = eps[show]
-      eps[show][season].min[0].upto(max) do |i|
+      1.upto(max) do |i|
         # found a missing episode, for now just display something
-        log("missing: #{show} season #{season} -> number #{i}") if not eps[show][season].has_key? i
+        log("missing: #{show} season #{season} -> number #{i}") if not eps[show][season].has_key? i.to_s
         end
       end
     end    
