@@ -91,6 +91,7 @@ movies_directory:
       - /media/TERA/movies/watch
   regex:
     - (.*)(\s|\.)BluRay(\s|\.).*x264            # Movie.BluRay.x264-fOBaR  
+    - (.*)(\s|\.)BluRay(\s|\.).*DTS             # Movie.BluRay.foo.DTS
     - (.*)(\s|\.)DVDRip(\s|\.).*XviD            # Movie.DVDRip.XviD-fOBaR  
     - (.*)(\s|\.)BDRip(\s|\.).*(XviD|x264)?     # Movie.BDRip.XviD-fOBaR  
     - (.*)(\s|\.)BRRip(\s|\.).*(XviD|x264)?     # Movie.BRRip.XviD-fOBaR  
@@ -104,6 +105,7 @@ movies_directory:
     - (.*)(\s|\.)R5                             # Movie.R5-fOBaR  
     - (.*)(\s|\.)HDDVDRip                       # Movie.HDDVDRip-fOBaR  
     - (.*)(\s|\.|\]|\[|\()DVDRip                # Movie.UNRATED.RERIP.DVDRip.XviD-fOBaR  
+    - (.*)(\s|\.)BluRay.*DTS                    # Movie.BluRay DTS AC3
 
 movies_file:
   media_extentions: avi,mkv,mpg,ogg,mpeg,mp4
