@@ -342,19 +342,31 @@ def move_file(f,target)
   stats = {}
   stats["src_size"] = ( not File.size?(f).nil?) ? File.size?(f) : 0
   stats["dst_size"] = ( not File.size?(target_file).nil? ) ? File.size?(target_file) : 0
+  
   if File.exists? f 
     if stats["src_size"] == 0 
       msg = "#{@script} -> src file zero bytes: \'#{File.basename(f) }\' remove new file ? [y/n] "
       prompt(f,"delete",msg)
       return 2
     end
-    if stats["src_size"] < 100000000 and $config["settings"]["prune_small"]
+    if stats["src_size"] < 100000000 and $config["settings"]["prune_small"] 
       msg = "#{@script} -> src file less than 100M: \'#{File.basename(f) }\' remove new file ? [y/n] "
       prompt(f,"delete", msg)
       return 2
     end
   end
- 
+  
+  if File.exists? f 
+    if stats["dst_size"] == 0 and File.exists? target_file
+      msg = "#{@script} -> dst file zero bytes will continue: \'#{File.basename(target_file) }\' remove new file ? [y/n] "
+      prompt(target_file,"delete",msg)
+    end
+    if stats["dst_size"] < 100000000 and $config["settings"]["prune_small"] and File.exists? target_file
+      msg = "#{@script} -> dst file less than 100M will continue: \'#{File.basename(target_file) }\' remove new file ? [y/n] "
+      prompt(target_file,"delete", msg)
+    end
+  end
+  
   $config["series"]["media_extentions"].split(/,/).each do |ext|
     file_target = File.basename(f).gsub(/.\w\w\w$/,'') + "." + ext
     if File.exists? "#{target}/#{file_target}"
@@ -409,6 +421,12 @@ def move_file(f,target)
     # if the directory does not exist it is created
     FileUtils.mkdir_p(target,$options) if not File.directory? target
     FileUtils.mv(f,target,$options) if ( (File.dirname f) != target.gsub(/\/$/,''))
+    
+    stats["dst_size"] = ( not File.size?(target_file).nil? ) ? File.size?(target_file) : 0
+    if stats["src_size"] != stats["dst_size"]
+      log("error target file not equal to original : \"#{File.basename(f)}\"")
+    end
+
   else
     log("error not enough free space on \"#{target}\"")
   end
