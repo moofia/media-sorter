@@ -7,6 +7,9 @@
 
 rename:
   show:
+      "Project Runway Allstars": "Project Runway All stars"
+      "Dancing With the Stars us": "Dancing With the Stars"
+      "Awkward": "Awkward."
       "Scandal": "Scandal (2012)"
       "Scandal us": "Scandal (2012)"
       "Emily Owens MD": "Emily Owens, M.D."
@@ -27,6 +30,7 @@ rename:
       "castle": "Castle (2009)"
       "Gordon Ramsay Behind Bars": "Gordon Behind Bars"
       "masterchef au": "masterchef australia"
+      "Dragons Den uk": "Dragons' Den"
       "Dragons Den": "Dragons' Den"
       "Dragons Den ca": "Dragons' Den (Canada)"
       "Dragons' Den ca": "Dragons' Den (Canada)"
@@ -83,9 +87,10 @@ rename:
       "frontline (us)": "frontline (pbs)"
       "Spartacus - Gods of the Arena": "Spartacus: Gods of the Arena"
       "Sanctuary US": "Sanctuary"
-      "Star Wars the Clone Wars (2008)": "Star Wars - The Clone Wars"
-      "Star Wars - The Clone Wars (2008)": "Star Wars - The Clone Wars"
-      "Star Wars the Clone Wars": "Star Wars - The Clone Wars"
+      "Star Wars the Clone Wars (2008)": "Star Wars:  The Clone Wars"
+      "Star Wars - The Clone Wars (2008)": "Star Wars:  The Clone Wars"
+      "Star Wars the Clone Wars": "Star Wars: The Clone Wars"
+      "Star Wars - the Clone Wars": "Star Wars: The Clone Wars"
       Sea_patrol: Sea patrol
       "Sanctuary (US)": Sanctuary
       "Rush (2008)": Rush
