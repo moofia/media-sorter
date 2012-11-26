@@ -849,3 +849,16 @@ def display_errors
   end
 
 end
+
+def correct_name
+
+  episode_status, episode_name, episode_season, episode_episode = tv_file("#{$opt["correct-name"]} foo.avi")
+  if episode_status == true
+    episode = Episode.new $opt["correct-name"]
+    if episode.is_ep?
+      episode.season.gsub!(/^/,'0') if episode.season.to_i < 10 and episode.season.to_i != 0
+      episode.number.gsub!(/^/,'0') if episode.number.to_i < 10 and episode.number.to_i != 0
+      print "#{episode.show} #{episode.season} #{episode.number}"
+    end
+  end
+end

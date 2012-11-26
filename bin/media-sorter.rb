@@ -59,6 +59,8 @@ begin
     ["--src",                         Getopt::OPTIONAL],
     ["--dst_movie",                   Getopt::OPTIONAL],
     ["--movie",                       Getopt::BOOLEAN],
+    ["--trust-first-ep",              Getopt::BOOLEAN],
+    ["--correct-name",                Getopt::OPTIONAL],
     ["--log-level",                   Getopt::OPTIONAL]
     )
 rescue Getopt::Long::Error => e
@@ -126,6 +128,12 @@ end
 
 # remove trailing / from bash_completion
 src = src.gsub(/\/$/,'')
+
+# correct name
+if $opt["correct-name"]
+  correct_name
+  exit
+end
 
 # prune empty directories and exit
 if $opt["prune-empty-directories"]
