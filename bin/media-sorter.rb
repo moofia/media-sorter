@@ -7,7 +7,7 @@
 # TODO: Show class ?? not sure if i would gain anything by this, might mask tvdb totally though which will be good
 # TODO: find files that are not named correctly
 # TODO: require search path ?
-
+ii
 require 'rubygems'
 require 'ap'
 require 'fileutils'
