@@ -61,8 +61,8 @@ series:
   storage:
       - /media/TERA/tv
       - /media/TERA/tv2
-  media_extentions: avi,mkv,mpg,ogg,mpeg,mp4
-  duplicate_priority: mp4,avi,mkv,mpg
+  media_extentions: avi,mkv,mpg,ogg,mpeg,mp4,m4v
+  duplicate_priority: mp4,avi,mkv,m4v,mpg
   #Desperate Housewives - [01x01] - Pilot.avi
   regex:
     - (.*)\.s(\d+)e(\d+)e(\d+)                 # Tv.Show.S13E01E02.avi  
