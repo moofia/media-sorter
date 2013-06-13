@@ -75,6 +75,8 @@ class Episode
     show.gsub!(/\s+$/,'')    
     $config_rename["rename"]["show"].keys.each {|s| show.gsub!(/^#{Regexp.escape(s)}$/i,$config_rename["rename"]["show"][s])}    
     show.gsub!(/(\s|\.)(\d\d\d\d)$/,' (\2)')
+    show.gsub!(/(\s|\.)(us)$/i,' (us)')
+    show.gsub!(/(\s|\.)(uk)$/i,' (uk)')
 
     show = show.downcase.titlecase
     upcase_country(show)

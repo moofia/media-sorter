@@ -55,9 +55,12 @@ def thetvdb_get_show_id(show)
     series_name.gsub!(/:/,'')
     find.gsub!(/:/,'')
 
+    log "show -> #{show} : looking at show of -> #{series_name}" if $config["settings"]["log_level"] > 1
+
     if series_name  =~ /#{pre_regex}#{find}$/i     
        show_id = item.find('id')[0].child.to_s
     end
+
   end
   if show_id == ""
    handle_error("tvdb error: can not find id for show \'#{show}\'")
@@ -106,6 +109,7 @@ end
 
 def thetvdb_lookup(show)
   show_id = thetvdb_get_show_id(show)
+  log "show -> #{show} : show_id status -> #{show_id}" if $config["settings"]["log_level"] > 1
   @tvdb_episodes = thetvdb_get_show_episodes(show_id,show) if show_id     
   return false if show_id == false
   true
