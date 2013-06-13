@@ -61,6 +61,12 @@ def thetvdb_get_show_id(show)
        show_id = item.find('id')[0].child.to_s
     end
 
+    if show_id == ""
+      find.gsub!(/(\s|\.)(us)$/i,' (us)')
+      find.gsub!(/(\s|\.)(uk)$/i,' (uk)')
+      show_id = item.find('id')[0].child.to_s
+    end
+
   end
   if show_id == ""
    handle_error("tvdb error: can not find id for show \'#{show}\'")
