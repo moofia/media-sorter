@@ -40,6 +40,8 @@ def thetvdb_get_show_id(show)
       xml_data.each {|x| file.puts x}
     end
   end
+  showIncorrectStatus = false
+  
   doc.find('//Data/Series').each do |item|
     find = show
     find = Regexp.escape(show) if show =~ /\'|\(|\&|\*|\?/
@@ -59,14 +61,19 @@ def thetvdb_get_show_id(show)
 
     if series_name  =~ /#{pre_regex}#{find}$/i     
        show_id = item.find('id')[0].child.to_s
+       showIncorrectStatus = false       
     end
 
     if show_id == ""
-      find.gsub!(/(\s|\.)(us)$/i,' (us)')
-      find.gsub!(/(\s|\.)(uk)$/i,' (uk)')
-      show_id = item.find('id')[0].child.to_s
+      showIncorrectStatus = true
     end
 
+    if showIncorrectStatus == true
+      newShow = "#{find}"
+      newShow.gsub!(/(\s|\.)(us)$/i,' (us)')
+      newShow.gsub!(/(\s|\.)(uk)$/i,' (uk)')
+      handle_error("tvdb error: show \'#{show}\' is actually \'#{newShow}\' update tv-name-mapping.yaml")
+    end
   end
   if show_id == ""
    handle_error("tvdb error: can not find id for show \'#{show}\'")

@@ -92,8 +92,7 @@ def tv_file(file)
   ext_list = $config["series"]["media_extentions"].split(/,/).map.join("|")
   ext = ".*\.(#{ext_list})$" 
   name, season, episode = "", "", ""
-
-  $config['series']['regex'].each do |pattern|
+  $config['series']['regex'].each do |pattern|    
     if file =~ /#{pattern}#{ext}/i
       name    = $1 if $1
       season  = $2 if $2
