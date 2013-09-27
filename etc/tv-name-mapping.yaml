@@ -7,6 +7,8 @@
 
 rename:
   show:
+      "sink-seinfeld": "seinfeld"
+      "Brooklyn Nine Nine": "Brooklyn Nine-Nine"
       "The Michael J Fox Show": "The Michael J. Fox Show"
       "Marvels Agents of S H I E L D": "Marvel's Agents of S.H.I.E.L.D."
       "Low Winter Sun": "Low Winter Sun (US)"
