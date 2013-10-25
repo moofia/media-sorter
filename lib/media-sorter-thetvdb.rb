@@ -37,7 +37,8 @@ def thetvdb_get_show_id(show)
       return 
     end
     File.open(cache, 'w') do |file| 
-      xml_data.each {|x| file.puts x}
+      file.puts xml_data
+      #xml_data.each {|x| file.puts x}
     end
   end
   showIncorrectStatus = false
@@ -104,7 +105,9 @@ def thetvdb_get_show_episodes(show_id,show)
     doc = parser.parse
     
     File.open(cache, 'w') do |file|
-      xml_data.each {|x| file.puts x}
+      # TODO: odd no idea whats changed here or why
+      file.puts xml_data
+      #xml_data.split(/\n/).each {|x| file.puts x}
     end
   end
 

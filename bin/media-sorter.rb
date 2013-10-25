@@ -108,10 +108,16 @@ $options       = $options
 $cache_state   = false
 @errors        = {}
 
+
 $opt["tvdb"]   = $config["tvdb"]["default"] if not $opt["tvdb"]
 $opt["dst_no_hierarchy"]  = $config["settings"]["dst_no_hierarchy"] if $config["settings"]["dst_no_hierarchy"]
 
 $config["settings"]["log_level"] = $opt["log-level"].to_i if $opt["log-level"]
+
+# FIXME: refactor defaults
+if ! File.directory? @tvdir2
+  @tvdir2 = false
+end
 
 log("debug enabled",4)
 log("dry run enabled, no files will be renamed or moved") if $opt["dry"]
@@ -121,8 +127,9 @@ fs_case_sensitivity_test
 unrar_found_test
 
 # i dont like this here, move_file should be take this into account
+# FIXME: 
 if @tvdir2
-  files_secondary = find_files(true,@tvdir2)
+  files_secondary = find_files(true,@tvdir2)  
   @is_on_secondary_storage = is_on_secondary_storage @tvdir2,files_secondary
 end
 

@@ -4,7 +4,6 @@ mac os install:
 Xcode
 Macports
 
-port install git-core
 port install libxml2
 port install unrar
 gem install awesome_print
@@ -26,7 +25,7 @@ apt-get install zlib1g-dev
 gem install awesome_print
 gem install getopt
 gem install libxml-ruby
-gem install titclecase
+gem install titlecase
 gem install json
 
 

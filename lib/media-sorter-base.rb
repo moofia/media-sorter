@@ -89,7 +89,9 @@ end
 
 # check if the file is a tv file based on the file name
 def tv_file(file)
-  ext_list = $config["series"]["media_extentions"].split(/,/).map.join("|")
+  # FIXME: refactor!!!!
+  ext_list = $config["series"]["media_extentions"].gsub(/,/,"|")
+  
   ext = ".*\.(#{ext_list})$" 
   name, season, episode = "", "", ""
   $config['series']['regex'].each do |pattern|    
@@ -122,7 +124,8 @@ def handle_rar(rar)
   if File.exists? rar
     log("handle_rar #{rar}") if $opt["debug"]
     directory = File.dirname(rar)
-    ext_list = $config["series"]["media_extentions"].split(/,/).map.join("|")
+    ext_list = $config["series"]["media_extentions"].gsub(/,/,"|")
+    
     episode_status, episode_name, episode_season, episode_episode = tv_file(File.basename(directory) + ".avi")
     if episode_status
       unrar_list = %x[unrar l #{rar}]
@@ -217,8 +220,8 @@ end
 
 # returns an array of tv files
 def find_files(recusive,sort)
-  ext_list = $config["series"]["media_extentions"].split(/,/).map.join("|")
-  files = []
+  ext_list = $config["series"]["media_extentions"].gsub(/,/,"|")
+  files = []  
   Find.find(sort) do |path|
     next if File.dirname(path) != sort and not recusive
     next if File.directory? path
@@ -510,7 +513,6 @@ def find_missing(files)
       if tvdb_result == false 
         handle_error("failed to find tvshow \'#{show}\' from tvdb, skipping..")
       else
-        debug @tvdb_episodes
         max = @tvdb_episodes[show][season].max[0]
         tmp_date = "2020-01-01"
         @tvdb_episodes[show][season][max].keys.each do |name|
@@ -677,7 +679,7 @@ end
 
 # check if the file is a movie file based on the file name
 def movie_file(file)
-  ext_list = $config["movies_file"]["media_extentions"].split(/,/).map.join("|")
+  ext_list = $config["movies_file"]["media_extentions"].gsub(/,/,"|")
   ext = ".*\.(#{ext_list})$" 
   name = ""
 
@@ -693,7 +695,8 @@ end
 
 # check if the file is a movie file based on the file name
 def music_file(file)
-  ext_list = $config["music_file"]["media_extentions"].split(/,/).map.join("|")
+  ext_list = $config["music_file"]["media_extentions"].gsub(/,/,"|")
+  
   ext = ".*\.(#{ext_list})$" 
   name = ""
 
