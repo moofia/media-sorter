@@ -131,7 +131,8 @@ def handle_rar(rar)
       unrar_list = %x[unrar l #{rar}]
       count = 0
       unrar_list_file = ""
-      unrar_list.each do |line|
+      #unrar_list.each do |line|
+      unrar_list.split(/\n/).each do |line|
         if line =~ /(.*)(#{ext_list})\s+\d+\w\d+/
           count = count + 1
           unrar_list_file = line
