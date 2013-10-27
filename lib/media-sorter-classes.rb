@@ -80,6 +80,7 @@ class Episode
     upcase_country(show)
     @show_on_fs = show.gsub(/\*/,'')
     @show_on_fs.gsub!(/\?/,'')
+    @show_on_fs.gsub!(/\.$/,'')
     show
   end
   
