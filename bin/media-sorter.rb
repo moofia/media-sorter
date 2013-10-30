@@ -92,14 +92,13 @@ end
 $config_rename = YAML::load(File.read("#{$script_dir}/etc/tv-name-mapping.yaml"))
 src            = $config["settings"]["source_directory"]
 @tvdir         = $config["settings"]["destination_directory"]
-@tvdir2        = $config["settings"]["destination_directory2"]
 src            = $opt["src"] if $opt["src"]
 @tvdir         = $opt["dst"] if $opt["dst"]
-@tvdir2        = $opt["dst2"] if $opt["dst2"]
 @src           = src
 @movie_dir     = $config["settings"]["destination_movie_directory"]
 @movie_dir     = $opt["dst_movie"] if $opt["dst_movie"]
 
+$show_storage  = {} 
 $options       = {} 
 $options[:noop]    = true if $opt["dry"]
 $options[:verbose] = true if $opt["verbose"]
@@ -114,23 +113,20 @@ $opt["dst_no_hierarchy"]  = $config["settings"]["dst_no_hierarchy"] if $config["
 
 $config["settings"]["log_level"] = $opt["log-level"].to_i if $opt["log-level"]
 
-# FIXME: refactor defaults
-if ! File.directory? @tvdir2
-  @tvdir2 = false
-end
-
 log("debug enabled",4)
 log("dry run enabled, no files will be renamed or moved") if $opt["dry"]
+
+
 
 # test to see if the filesystem is case sensitive or not for destination paths.
 fs_case_sensitivity_test
 unrar_found_test
 
-# i dont like this here, move_file should be take this into account
-# FIXME: 
-if @tvdir2
-  files_secondary = find_files(true,@tvdir2)  
-  @is_on_secondary_storage = is_on_secondary_storage @tvdir2,files_secondary
+# work out where one should put media
+find_storage_locations
+
+if not @tvdir
+  @tvdir = $config["settings"]["storage destinations"]["tv"][0]
 end
 
 # remove trailing / from bash_completion

@@ -1,10 +1,14 @@
 ---
 settings:
   source_directory: /media/TERA/sort
-  destination_directory: /media/TERA/tv
-  destination_directory2: /media/TERA2/tv
   destination_movie_directory: /media/TERA/movies/watch
-
+  # searches the list of directories where to store shows, if a show is found the destination will be reused.
+  # defaults to the first directory if not found or specified on the cli
+  storage destinations:
+    tv:
+      - /moo/foo/tv1
+      - /moo/bar//tv2
+      
   #dst_no_hierarchy: true
   # if log_directory not set defaults to install directory log
   #log_directory: /tmp
@@ -23,7 +27,7 @@ settings:
   # auto pruning of duplicates, new src is always removed.
   # currently equal size and < 100M and zero bytes
   auto_prune_duplicates: true
-  prune_small: true
+  prune_small: false
   prune_empty_directories: true
   
   # prepend directory for each season, number is added in automatically
@@ -58,9 +62,6 @@ themoviedb:
 # pattern order is critical as first matches
 series:
   process: true
-  storage:
-      - /media/TERA/tv
-      - /media/TERA/tv2
   media_extentions: avi,mkv,mpg,ogg,mpeg,mp4,m4v
   duplicate_priority: mp4,avi,mkv,m4v,mpg
   #Desperate Housewives - [01x01] - Pilot.avi
@@ -78,6 +79,7 @@ series:
     - (.*)\s\[(\d+)x(\d+)\.\d+x(\d+)\]\s       # Tv Show [6x16.6x17] episode.avi
     - (.*)\s\[(\d+)x(\d+)\-(\d+)\]\s           # Tv Show [6x16-17] episode.avi
     - (.*)\s\[(\d+)x(\d+)\.(\d+)\]\s           # Tv Show [6x16.17] episode.avi
+    - (.*)\s\[(\d+)x(\d+)\_(\d+)\]\s           # Tv Show [6x16_17] episode.avi
     - (.*)\ss(\d+)e(\d)+\s                     # Tv Show S01E01 episode.avi
     - (.*)\.(s+\d+)e(\d+)-e\d+\..*             # Show.S10E17-E18.episode.avi
     - (.*)\.(\d)(\d\d)\..*                     # tv.show.114.avi

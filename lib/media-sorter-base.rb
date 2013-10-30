@@ -479,13 +479,21 @@ def handle_series(episode)
     episode.fix_via_tvdb @tvdb_episodes if $opt["tvdb"] and @tvdb_episodes.has_key?(episode.show)
   end
   
+  # FIXME: temporay way to handle new destination folder
+  target_directory_original = @tvdir
+  if $show_storage.has_key? episode.show
+    @tvdir = $show_storage[episode.show]
+  end
+  
   season_pre = "season."
   season_pre = $config["settings"]["season_dir_prepend"] if $config["settings"].has_key? "season_dir_prepend"
   season = "#{season_pre}#{episode.season}"
   season = "specials" if episode.season == "0"
   target = "#{@tvdir}/#{episode.show_on_fs}/#{season}"  
   target = "#{@tvdir}" if $opt["dst_no_hierarchy"]
+
   move_file(episode.original_file,target)
+  @tvdir = target_directory_original
 end
 
 def find_missing(files) 
@@ -653,8 +661,8 @@ def remove_empty_directories(src)
   log("no empty directories were found") if not found and $opt["prune-empty-directories"]
 end
 
-# list of shows stored on secondary storage device
-def is_on_secondary_storage(path,src)
+# list of shows stored on storage device
+def shows_on_storage_device(path,src)
   shows = {}
   src.each do |s|
     show = s.gsub(/#{path}/,'')
@@ -817,6 +825,38 @@ def fs_case_sensitivity_test
   end
 end
 
+# test if the filesystem is case sensitive or not
+def new_fs_case_sensitivity_test (directory)
+  if File.directory? dst
+    if not File.directory? test_directory
+      $options_fs = {}
+      #$options_fs = {:noop=>true,:verbose=> true} if $opt["dry"]
+      $options_fs = {:noop=>true} if $opt["dry"]
+      
+      FileUtils.mkdir_p(test_directory,$options_fs)       
+      file1 = "#{test_directory}/file"
+      file2 = "#{test_directory}/FILE"
+      FileUtils.touch(file1,$options_fs)
+      FileUtils.touch(file2,$options_fs)
+      
+      count = 0
+      Find.find(test_directory) do |file|
+        next if  FileTest.directory?(file)
+        count = count + 1
+      end
+      
+      FileUtils.rm(file1,$options_fs)
+      FileUtils.rm(file2,$options_fs) if count == 2
+      FileUtils.rmdir(test_directory,$options_fs)
+  
+      $config["settings"]["fs_case_sensitive"] = true if count == 2
+      $config["settings"]["fs_case_sensitive"] = false if count == 1      
+      log("fs_case_sensitivity_test on #{dst} (#{$config["settings"]["fs_case_sensitive"]})") if $opt["debug"]
+      
+    end
+  end  
+end
+
 def display_errors
   puts
   # see which media files were found but failed to an episode that we expected 
@@ -864,4 +904,47 @@ def correct_name
       print "#{episode.show} #{episode.season} #{episode.number}"
     end
   end
+end
+
+# find where a show is stored physically on disk
+def find_storage_locations
+  if setting_ok_storage_locations
+    $config["settings"]["storage destinations"]["tv"].each do |directory|
+      files_secondary = find_files(true,directory)  
+      shows_on_storage_device(directory,files_secondary).keys.each do |show|
+        $show_storage[show] = directory
+      end
+    end
+  end
+end
+
+# check the setting for the directories and make sure they are valid and 
+# remove any directories that are invalid
+# only works for tv right now
+def setting_ok_storage_locations
+  status = false
+  new_storage = []
+  
+  if $config.has_key? "settings"
+    if $config["settings"].has_key? "storage destinations"
+      if $config["settings"]["storage destinations"].has_key? "tv"
+        if $config["settings"]["storage destinations"]["tv"].class == Array
+          $config["settings"]["storage destinations"]["tv"].push $opt["dst"] if $opt.has_key? "dst"
+          $config["settings"]["storage destinations"]["tv"].uniq!
+          $config["settings"]["storage destinations"]["tv"].each do |directory|
+            if  File.directory? directory
+              new_storage << directory
+            end
+          end
+          status = true
+        end
+      end
+    end
+  end
+  $config["settings"]["storage destinations"]["tv"] = new_storage
+  if $config["settings"]["storage destinations"]["tv"].count == 0
+    log "error: no storage destinations configured!"
+    exit
+  end
+  return status
 end
