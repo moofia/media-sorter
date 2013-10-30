@@ -254,7 +254,6 @@ puts <<HELP
   --verbose                   verbose output
   --src                       source folder
   --dst                       destination folder
-  --dst2                      secondary destination folder which overrides primary if show found
   --dst_no_hierarchy          destination folder hierarchy off
   --debug                     extra log messages for debugging
   --recursive                 recurse directory tree
