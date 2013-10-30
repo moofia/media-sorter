@@ -21,7 +21,6 @@ require 'titlecase'
 require 'json'
 require 'pty'
 
-
 $script_dir = File.expand_path($0).gsub(/\/bin\/.*/,'')
 
 # main include file for the script

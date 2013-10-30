@@ -26,8 +26,6 @@ gem install libxml-ruby
 gem install titlecase
 gem install json
 
-
-
 usage: media-sorter.rb --src [src dir] --dst [destination dir] --debug
 
   --src                       source folder
