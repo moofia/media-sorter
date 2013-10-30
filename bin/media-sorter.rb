@@ -156,6 +156,7 @@ process_file(src)
 get_directories(src).each do |directory|
   media = ""
   media = process_file(directory)
+  remove_empty_directories(directory)
   media = process_movie(directory) if media == ""
 end
 
