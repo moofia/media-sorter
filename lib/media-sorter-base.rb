@@ -320,7 +320,9 @@ end
 # make sure there is enough free space on the dst
 def ensure_free_space(src,dst)
   state = true
-    
+  #lines = %x[df #{dst}]
+  #n = lines.last.split[1].to_i * 1024
+  #debug lines
   return state
 end
 
@@ -423,8 +425,12 @@ def move_file(f,target)
   if is_space 
     # if the directory does not exist it is created
     FileUtils.mkdir_p(target,$options) if not File.directory? target
+    begin
     FileUtils.mv(f,target,$options) if ( (File.dirname f) != target.gsub(/\/$/,''))
-    
+    rescue => e
+      log("error: problem with target, reason #{e.to_s}")
+      exit 1
+    end
     stats["dst_size"] = ( not File.size?(target_file).nil? ) ? File.size?(target_file) : 0
     if stats["src_size"] != stats["dst_size"]
       log("error target file not equal to original : \"#{File.basename(f)}\"")
