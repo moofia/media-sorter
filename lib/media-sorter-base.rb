@@ -223,12 +223,17 @@ end
 def find_files(recusive,sort)
   ext_list = $config["series"]["media_extentions"].gsub(/,/,"|")
   files = []  
-  Find.find(sort) do |path|
-    next if File.dirname(path) != sort and not recusive
-    next if File.directory? path
-    next if File.basename(path) =~ /^\./
-    next if path !~ /#{ext_list}$/
-    files << path
+  if File.directory? sort
+    Find.find(sort) do |path|
+      next if File.dirname(path) != sort and not recusive
+      next if File.directory? path
+      next if File.basename(path) =~ /^\./
+      next if path !~ /#{ext_list}$/
+      files << path
+    end
+  else
+    log("error: source directory of \"#{sort}\" does not exist!")
+    exit 2
   end
   files
 end
@@ -273,47 +278,6 @@ puts <<HELP
 HELP
 
 exit
-end
-
-# returns a xml of the url to get via a proxy
-def http_get_via_proxy(url)
-  log("http get via proxy : #{url}") if $opt["debug"]
-  begin
-    proxy = ENV['http_proxy']
-    proxy_host, proxy_port = proxy.gsub(/^http:\/\//,'').split(/:/)
-    myurl = URI.parse(url)
-    req = Net::HTTP::Get.new(myurl.request_uri)
-    res= Net::HTTP::Proxy(proxy_host, proxy_port).start(myurl.host,myurl.port) { |http| http.request(req) }
-    html = res.body
-  # XXX must fix the rescue its not working
-  rescue => err
-    log("Error: #{err}")
-    exit 2
-  end
-  html
-end
-
-# returns a xml of the url to gets directly
-def http_get_direct(url)
-  log("http get : #{url}") if $opt["debug"]
-  begin
-    html = Net::HTTP.get_response(URI.parse(url)).body
-  # XXX must fix the rescue its not working
-  rescue => err
-    log("Error: #{err}")
-    exit 2
-  end
-  html
-end
-
-# handle http gets
-def http_get(url)
-  if ENV.has_key? "http_proxy"
-    data = http_get_via_proxy(url)
-  else
-    data = http_get_direct(url)      
-  end
-  data
 end
 
 # make sure there is enough free space on the dst
@@ -615,9 +579,14 @@ end
 # returns a list of files
 def get_files(src)
   files = Array.new
-  Find.find(src) do |path|
-    next if File.directory? path
-    files.push path
+  if File.directory? src
+    Find.find(src) do |path|
+      next if File.directory? path
+      files.push path
+    end
+  else
+    log("error: source directory of \"#{src}\" does not exist!")
+    exit 2
   end
   files.reverse
 end

@@ -97,6 +97,7 @@ movies_directory:
     - (.*)(\s|\.)BluRay(\s|\.).*x264            # Movie.BluRay.x264-fOBaR  
     - (.*)(\s|\.)BluRay(\s|\.).*DTS             # Movie.BluRay.foo.DTS
     - (.*)(\s|\.)DVDRip(\s|\.).*XviD            # Movie.DVDRip.XviD-fOBaR  
+    - (.*)(\s|\.)WEBRiP(\s|\.).*XviD            # Movie.WEBRiP.XviD-fOBaR  
     - (.*)(\s|\.)BDRip(\s|\.).*(XviD|x264)?     # Movie.BDRip.XviD-fOBaR  
     - (.*)(\s|\.)BRRip(\s|\.).*(XviD|x264)?     # Movie.BRRip.XviD-fOBaR  
     - (.*)(\s|\.)DVDRip(\s|\.).*XviD            # Movie.DVDRip.XviD-fOBaR  

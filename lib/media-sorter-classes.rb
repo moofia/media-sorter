@@ -56,7 +56,12 @@ class Episode
         @original_file = @file
       elsif orig.downcase != @file.downcase
         log "fix_via_tvdb: #{orig} to #{@file}" if $config["settings"]["log_level"] > 1
-        FileUtils.mv(orig,@file,$options) 
+        begin
+          FileUtils.mv(orig,@file,$options) if not File.exist? @file         
+        rescue => e
+          log("error: problem with target, reason #{e.to_s}")
+          exit 1
+        end
         @original_file = @file
       end
     end

@@ -25,6 +25,7 @@ $script_dir = File.expand_path($0).gsub(/\/bin\/.*/,'')
 
 # main include file for the script
 require "#{$script_dir}/lib/media-sorter-base"
+require "#{$script_dir}/lib/media-sorter-http"
 require "#{$script_dir}/lib/media-sorter-classes"
 require "#{$script_dir}/lib/media-sorter-thetvdb.rb"
 require "#{$script_dir}/lib/media-sorter-themoviedb.rb"
