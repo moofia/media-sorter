@@ -375,13 +375,6 @@ def move_directory(directory,target)
  end
 end
 
-# call first for music to look and decide on what actions on will take with renaming or moving
-def handle_music(music)
-  return false if $config['music_file']['process'] != true
-  log("handle_music -> do something with the music file #{music.file}")
-  ap $config['music_file']['storage'] if $opt["debug"]
-end
-
 def find_missing(files) 
 
   eps = {}
@@ -564,23 +557,6 @@ def shows_on_storage_device(path,src)
   shows
 end
 
-# check if the file is a movie file based on the file name
-def music_file(file)
-  ext_list = $config["music_file"]["media_extentions"].gsub(/,/,"|")
-  
-  ext = ".*\.(#{ext_list})$" 
-  name = ""
-
-  $config['music_file']['regex'].each do |pattern|
-    if file =~ /.*#{pattern}#{ext}/i
-      name    = $1 if $1
-      return false if name =~ /^sample/i
-      return true
-    end
-  end
-  return false
-end
-
 # based on what the object is enrich the object
 def enrich_object(object)
   movie_lookup(object) if object.class.to_s == "Movie" and $config["themoviedb"]["default"] == true
@@ -667,6 +643,8 @@ def new_fs_case_sensitivity_test (directory)
   end  
 end
 
+# say soemthing when there are errors at the end of the script run otherwise errors might be missed when they are
+# found at run time
 def display_errors
   puts
   # see which media files were found but failed to an episode that we expected 
@@ -703,12 +681,12 @@ def display_errors
 
 end
 
+# say something when no movies or series are found
 def display_no_data
   if Movie.find_all.count == 0 and Episode.find_all.count == 0
     log("no new media found")
   end
 end
-
 
 # find where a show is stored physically on disk
 def find_storage_locations
