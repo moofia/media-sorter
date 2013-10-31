@@ -293,7 +293,7 @@ end
 def move_file(f,target)
   # do nothing if the file does not exist, this can occur
   return 2 if not File.exists? f
-  log_new("move_file -> #{File.basename(f) }")
+  log_new("move file -> #{File.basename(f) }")
   
   target_file = target + "/" + File.basename(f)   
   stats = {}
@@ -396,7 +396,7 @@ end
 
 # moves the directory to target location and creates directories if needed
 def move_directory(directory,target)
- log_new("move_directory -> #{File.basename(directory)}")
+ log_new("move directory -> #{File.basename(directory)}")
   
  if File.exists? "#{target}/#{File.basename(directory)}"
    log("warning dst directory exists: \'#{File.basename(directory)}\'")
