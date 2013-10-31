@@ -65,3 +65,20 @@ def series_lookup(episode)
     thetvdb_lookup(episode.show)
   end
 end
+
+# a method where the logic behind episode matching can be used outside of this script to return
+# show series episode number
+# ./bin/media-sorter.rb --correct-name /moo/doo/Show/Season\ 1/Show\ \[1x01\]\ Truth\ Be\ Told.avi 
+# Show 01 01
+def correct_name(file)
+  request = File.basename file
+  episode_status, episode_name, episode_season, episode_episode = tv_file("#{request} foo.avi")
+  if episode_status == true
+    episode = Episode.new $opt["correct-name"]
+    if episode.is_ep?
+      episode.season.gsub!(/^/,'0') if episode.season.to_i < 10 and episode.season.to_i != 0
+      episode.number.gsub!(/^/,'0') if episode.number.to_i < 10 and episode.number.to_i != 0
+      print "#{episode.show} #{episode.season} #{episode.number}"
+    end
+  end
+end

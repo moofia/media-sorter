@@ -26,6 +26,8 @@ $script_dir = File.expand_path($0).gsub(/\/bin\/.*/,'')
 # main include file for the script
 require "#{$script_dir}/lib/media-sorter-base"
 require "#{$script_dir}/lib/media-sorter-http"
+require "#{$script_dir}/lib/media-sorter-series"
+require "#{$script_dir}/lib/media-sorter-movies"
 require "#{$script_dir}/lib/media-sorter-classes"
 require "#{$script_dir}/lib/media-sorter-thetvdb.rb"
 require "#{$script_dir}/lib/media-sorter-themoviedb.rb"
@@ -132,7 +134,11 @@ $config["settings"]["log_level"] = $opt["log-level"].to_i if $opt["log-level"]
 log("debug enabled",4)
 log("dry run enabled, no files will be renamed or moved") if $opt["dry"]
 
-
+# correct name
+if $opt["correct-name"]
+  correct_name $opt["correct-name"]
+  exit
+end
 
 # test to see if the filesystem is case sensitive or not for destination paths.
 fs_case_sensitivity_test
@@ -148,11 +154,7 @@ end
 # remove trailing / from bash_completion
 src = src.gsub(/\/$/,'')
 
-# correct name
-if $opt["correct-name"]
-  correct_name
-  exit
-end
+
 
 # prune empty directories and exit
 if $opt["prune-empty-directories"]

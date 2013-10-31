@@ -87,37 +87,6 @@ def log_new(msg)
  puts "#{@script} -> #{msg}"
 end
 
-# check if the file is a tv file based on the file name
-def tv_file(file)
-  # FIXME: refactor!!!!
-  ext_list = $config["series"]["media_extentions"].gsub(/,/,"|")
-  
-  ext = ".*\.(#{ext_list})$" 
-  name, season, episode = "", "", ""
-  $config['series']['regex'].each do |pattern|    
-    if file =~ /#{pattern}#{ext}/i
-      name    = $1 if $1
-      season  = $2 if $2
-      episode = $3 if $3
-      episode = "#{$3}x#{$4}" if $3 and $4 =~ /^\d/      
-      return true, name, season, episode
-    end
-  end
-  return false, name, season, episode
-end
-
-# process movies to see what to do with it
-def process_movie(src)
-  return if @movie_dir !~ /\w/
-  return if src =~ /\.nfo$/i
-  return if src =~ /\/subs$/i
-  return if src =~ /\.sample$/i
-  if $config["movies_directory"]["process"] == true
-    movie = Movie.new src    
-    movie.status = handle_movie_directory movie if movie.is_movie?
-  end
-end
-
 # handle unrar'n 
 # this is only done for tv series if a single episode is found in the volume
 def handle_rar(rar)
@@ -413,45 +382,6 @@ def handle_music(music)
   ap $config['music_file']['storage'] if $opt["debug"]
 end
 
-# call first to look and decide on renaming
-def handle_series(episode)
-  tvdb_result = series_lookup(episode) if ($opt["tvdb"]) && (! @tvdb_episodes.has_key?(episode.show))
-  if tvdb_result == false
-    handle_error("failed to find tvshow \'#{episode.show}\' from tvdb, skipping..") if $opt["debug"]
-    return false
-  end
-  re_cache = episode.fix_via_tvdb @tvdb_episodes if $opt["tvdb"] and @tvdb_episodes.has_key?(episode.show)
-
-  # we do one round of re-caching only if the episode name is not found
-  if re_cache
-    log("re-caching from tvdb")
-    $opt["tvdb-refresh"] = true
-    @tvdb_episodes = {}
-    tvdb_result = series_lookup(episode) if ($opt["tvdb"]) && (! @tvdb_episodes.has_key?(episode.show))
-    if tvdb_result == false
-      handle_error("failed to find tvshow \'#{episode.show}\' from tvdb, skipping..")
-      return false
-    end
-    episode.fix_via_tvdb @tvdb_episodes if $opt["tvdb"] and @tvdb_episodes.has_key?(episode.show)
-  end
-  
-  # FIXME: temporay way to handle new destination folder
-  target_directory_original = @tvdir
-  if $show_storage.has_key? episode.show
-    @tvdir = $show_storage[episode.show]
-  end
-  
-  season_pre = "season."
-  season_pre = $config["settings"]["season_dir_prepend"] if $config["settings"].has_key? "season_dir_prepend"
-  season = "#{season_pre}#{episode.season}"
-  season = "specials" if episode.season == "0"
-  target = "#{@tvdir}/#{episode.show_on_fs}/#{season}"  
-  target = "#{@tvdir}" if $opt["dst_no_hierarchy"]
-
-  move_file(episode.original_file,target)
-  @tvdir = target_directory_original
-end
-
 def find_missing(files) 
 
   eps = {}
@@ -634,35 +564,6 @@ def shows_on_storage_device(path,src)
   shows
 end
 
-# check if the file is a movie file based on the directory name
-def movie_directory(directory)
-
-  movie = ""
-  $config['movies_directory']['regex'].each do |pattern|
-    if directory =~ /#{pattern}/i
-      movie   = $1 if $1
-      return true, movie
-    end
-  end
-  return false, movie
-end
-
-# check if the file is a movie file based on the file name
-def movie_file(file)
-  ext_list = $config["movies_file"]["media_extentions"].gsub(/,/,"|")
-  ext = ".*\.(#{ext_list})$" 
-  name = ""
-
-  $config['movies_file']['regex'].each do |pattern|
-    if file =~ /.*#{pattern}#{ext}/i
-      name    = $1 if $1
-      return false if name =~ /^sample/i
-      return true
-    end
-  end
-  return false
-end
-
 # check if the file is a movie file based on the file name
 def music_file(file)
   ext_list = $config["music_file"]["media_extentions"].gsub(/,/,"|")
@@ -683,59 +584,6 @@ end
 # based on what the object is enrich the object
 def enrich_object(object)
   movie_lookup(object) if object.class.to_s == "Movie" and $config["themoviedb"]["default"] == true
-end
-
-# wrapper method to decided which db to query
-def movie_lookup(movie)
-  if $config.has_key? "themoviedb" and $config["themoviedb"].has_key? "api_key" and $config["themoviedb"].has_key? "base_url"
-    log("movie_lookup themoviedb: #{movie.name}") if $opt["debug"]
-    themoviedb_lookup movie
-  end
-end
-
-# wrapper method to decided which db to query
-def series_lookup(episode)
-  if $config.has_key? "tvdb" and $config["tvdb"].has_key? "api_key" and $config["tvdb"].has_key? "mirror"
-    #log("series_lookup tvdb: #{episode.show}")
-    thetvdb_lookup(episode.show)
-  end
-end
-
-# handle the movie directory and decided what actions must be taken
-def handle_movie_directory(movie)  
-  log("handle_movie_directory: #{movie.directory}") if $opt["debug"]
-  files = find_files(false,movie.directory)
-  status = true
-  files.each do |file|
-    # we must first make sure its not a tv file
-    tv_status, tv_show, tv_season, tv_number  = tv_file File.basename file
-    if tv_status
-      log ("error: #{movie.directory} contains a tv show -> #{File.basename file}")
-      status = false 
-    end
-    if not tv_status
-      # for now we only interested in if anything matches, later we can remove non movie
-      # related files if we wish
-      status = movie_file File.basename file if status == true
-    end
-  end
-
-  if status == true
-    movie.enrich
-    # hmmm not too sure about this ?
-    if $config["themoviedb"].has_key? "display_info_move" and $config["themoviedb"]["display_info_move"] == true
-      themoviedb_display movie 
-      result = handle_yes_no("move_movie","keep \"#{movie.name}\" based on the description ")
-    end
-    result = handle_yes_no("move_movie","movie found: move #{movie.title_full} \"#{movie.name}\"")
-    if result
-      move_directory(movie.directory,@movie_dir) 
-    end
-  else
-    log("move #{movie.directory} -> contains invalid files doing nothing")    
-  end
-    
-  status
 end
 
 # test if unrar exists
@@ -861,18 +709,6 @@ def display_no_data
   end
 end
 
-def correct_name
-
-  episode_status, episode_name, episode_season, episode_episode = tv_file("#{$opt["correct-name"]} foo.avi")
-  if episode_status == true
-    episode = Episode.new $opt["correct-name"]
-    if episode.is_ep?
-      episode.season.gsub!(/^/,'0') if episode.season.to_i < 10 and episode.season.to_i != 0
-      episode.number.gsub!(/^/,'0') if episode.number.to_i < 10 and episode.number.to_i != 0
-      print "#{episode.show} #{episode.season} #{episode.number}"
-    end
-  end
-end
 
 # find where a show is stored physically on disk
 def find_storage_locations
