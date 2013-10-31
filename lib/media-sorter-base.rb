@@ -294,17 +294,6 @@ def move_file(f,target)
   # do nothing if the file does not exist, this can occur
   return 2 if not File.exists? f
   log_new("move_file -> #{File.basename(f) }")
- 
-  # if the show is stored on the secondary storage device swap out the primary for the secondary in 
-  # the target.
-  if @tvdir2
-    show = target.gsub(/\/\//,'/').gsub(/#{@tvdir}/,'')
-    show = "/#{show}" if show !~ /^\//
-    show = File.dirname(show).split(/\//)[1]
-    if @is_on_secondary_storage.has_key? show
-      target.gsub!(/#{@tvdir}/,@tvdir2)
-    end
-  end
   
   target_file = target + "/" + File.basename(f)   
   stats = {}
@@ -322,9 +311,7 @@ def move_file(f,target)
       prompt(f,"delete", msg)
       return 2
     end
-  end
-  
-  if File.exists? f 
+
     if stats["dst_size"] == 0 and File.exists? target_file
       msg = "#{@script} -> dst file zero bytes will continue: \'#{File.basename(target_file) }\' remove new file ? [y/n] "
       prompt(target_file,"delete",msg)
@@ -395,7 +382,7 @@ def move_file(f,target)
       exit 1
     end
     stats["dst_size"] = ( not File.size?(target_file).nil? ) ? File.size?(target_file) : 0
-    if stats["src_size"] != stats["dst_size"]
+    if (stats["src_size"] != stats["dst_size"]) and not $opt["dry"]
       log("error target file not equal to original : \"#{File.basename(f)}\"")
     end
 
