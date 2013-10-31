@@ -401,6 +401,7 @@ def move_file(f,target)
 
   else
     log("error not enough free space on \"#{target}\"")
+    exit 2
   end
   
   1

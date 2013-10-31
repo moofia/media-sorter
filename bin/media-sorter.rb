@@ -71,13 +71,23 @@ end
 
 help if $opt["help"]
 
-$config = YAML::load(File.read("#{$script_dir}/etc/media-sorter.yaml.default"))
-  
+begin
+  $config = YAML::load(File.read("#{$script_dir}/etc/media-sorter.yaml.default"))
+rescue => e
+  puts "#{@script} -> yaml error #{e.message} in media-sorter.yaml.default"  
+  exit 2
+end
+
 # for all the keys being used in the default config file we will accept the given 
 # values from a local configuration file to overwrite the defaults.
 custom_config = "#{$script_dir}/etc/media-sorter.yaml"
 if File.exists? custom_config
-  $config_custom = YAML::load(File.read(custom_config))
+  begin
+    $config_custom = YAML::load(File.read(custom_config))
+  rescue => e
+    puts "#{@script} -> yaml error #{e.message} in #{custom_config}"  
+    exit 2
+  end
   $config.keys.each do |key1|
     if $config_custom.has_key? key1
       $config[key1].keys.each do |key2|
@@ -89,7 +99,13 @@ if File.exists? custom_config
   end
 end
 
-$config_rename = YAML::load(File.read("#{$script_dir}/etc/tv-name-mapping.yaml"))
+begin
+  $config_rename = YAML::load(File.read("#{$script_dir}/etc/tv-name-mapping.yaml"))
+rescue => e
+  puts "#{@script} -> yaml error #{e.message} in tv-name-mapping.yaml"  
+  exit 2
+end
+
 src            = $config["settings"]["source_directory"]
 @tvdir         = $config["settings"]["destination_directory"]
 src            = $opt["src"] if $opt["src"]

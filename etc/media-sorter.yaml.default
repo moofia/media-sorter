@@ -64,7 +64,6 @@ series:
   process: true
   media_extentions: avi,mkv,mpg,ogg,mpeg,mp4,m4v
   duplicate_priority: mp4,avi,mkv,m4v,mpg
-  #Desperate Housewives - [01x01] - Pilot.avi
   regex:
     - (.*)\.s(\d+)e(\d+)e(\d+)                 # Tv.Show.S13E01E02.avi  
     - (.*)\s-\s(\d+)x(\d+)\s-\s                # Tv Show - 1x13 - episode.avi
@@ -91,8 +90,6 @@ series:
 # at a later stage this can easily be collapsed into better regex
 movies_directory:
   process: true
-  storage:
-      - /media/TERA/movies/watch
   regex:
     - (.*)(\s|\.)BluRay(\s|\.).*x264            # Movie.BluRay.x264-fOBaR  
     - (.*)(\s|\.)BluRay(\s|\.).*DTS             # Movie.BluRay.foo.DTS
@@ -104,6 +101,7 @@ movies_directory:
     - (.*)(\s|\.)R5(\s|\.).*XviD                # Movie.R5.XviD-fOBaR  
     - (.*)(\s|\.)R5(\s|\.).*XViD                # Movie.R5 LiNE READNFO XViD-fOBaR  
     - (.*)(\s|\.)R6(\s|\.).*H264                # Movie.R6.LiNE.AC3.H264  
+    - (.*)(\s|\.)WEB-DL(\s|\.).*H264            # Movie.WEB-DL.AC3.H264  
     - (.*)(\s|\.)XViD(\s|\.).*R5                # Movie.XViD R5-fOBaR  
     - (.*)(\s|\.)PPVRip(\s|\.).*(XviD|x264)?    # Movie.PPVRip.XviD-fOBaR  
     - (.*)(\s|\.)DVDSCR                         # Movie.DVDSCR-fOBaR  
