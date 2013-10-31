@@ -214,7 +214,6 @@ def process_file(src)
     # finally we can handle rar's
     handle_rar(file) if file =~ /\.rar$/ and file !~ /part\d+\.rar$/
     handle_rar(file) if file =~ /part01\.rar$/
-    
   end # get_files
   media
 end
@@ -854,6 +853,12 @@ def display_errors
     end
   end
 
+end
+
+def display_no_data
+  if Movie.find_all.count == 0 and Episode.find_all.count == 0
+    log("no new media found")
+  end
 end
 
 def correct_name
