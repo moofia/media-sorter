@@ -766,7 +766,6 @@ def fs_case_sensitivity_test
   dirs = []
   dirs << @movie_dir if @movie_dir
   dirs << @tvdir if @tvdir
-  dirs << @tvdir2 if @tvdir2
   dirs.each do |dst|
   test_directory = "#{dst}/#{$$}"
     if File.directory? dst
@@ -782,19 +781,21 @@ def fs_case_sensitivity_test
         FileUtils.touch(file2,$options_fs)
         
         count = 0
-        Find.find(test_directory) do |file|
-          next if  FileTest.directory?(file)
-          count = count + 1
+        
+        if File.exist? test_directory
+          Find.find(test_directory) do |file| 
+            next if  FileTest.directory?(file)
+            count = count + 1
+          end
+          
+          FileUtils.rm(file1,$options_fs)
+          FileUtils.rm(file2,$options_fs) if count == 2
+          FileUtils.rmdir(test_directory,$options_fs)
+          
+          $config["settings"]["fs_case_sensitive"] = true if count == 2
+          $config["settings"]["fs_case_sensitive"] = false if count == 1      
+          log("fs_case_sensitivity_test on #{dst} (#{$config["settings"]["fs_case_sensitive"]})") if $opt["debug"]
         end
-        
-        FileUtils.rm(file1,$options_fs)
-        FileUtils.rm(file2,$options_fs) if count == 2
-        FileUtils.rmdir(test_directory,$options_fs)
-    
-        $config["settings"]["fs_case_sensitive"] = true if count == 2
-        $config["settings"]["fs_case_sensitive"] = false if count == 1      
-        log("fs_case_sensitivity_test on #{dst} (#{$config["settings"]["fs_case_sensitive"]})") if $opt["debug"]
-        
       end
     end  
   end
