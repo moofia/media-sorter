@@ -73,7 +73,7 @@ def thetvdb_get_show_id(show)
       newShow = "#{find}"
       newShow.gsub!(/(\s|\.)(us)$/i,' (us)')
       newShow.gsub!(/(\s|\.)(uk)$/i,' (uk)')
-      handle_error("tvdb error: show \'#{show}\' is actually \'#{newShow}\' update tv-name-mapping.yaml")
+      handle_error("tvdb error: show \'#{show}\' is actually \'#{newShow}\' update tv-name-mapping.yaml") if show != newShow
     end
   end
   if show_id == ""
