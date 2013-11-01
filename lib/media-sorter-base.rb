@@ -34,8 +34,8 @@ def prompt(file,action,msg)
   elsif $config["settings"]["auto_prune_duplicates"]
     @script = File.basename $0 
     msg.gsub!(/#{@script} -> /,'')
-    msg.gsub!(/remove new .*\[y\/n\]/,'autoremove occuring')
-    msg.gsub!(/remove dup .*\[y\/n\]/,'autoremove occuring')
+    msg.gsub!(/remove new .*\[y\/n\]/,'autoremove new source')
+    msg.gsub!(/remove dup .*\[y\/n\]/,'autoremove new source')
     log msg
     FileUtils.rm(file,$options) if action == "delete"
   end
