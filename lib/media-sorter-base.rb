@@ -316,7 +316,7 @@ def move_file(f,target)
   if File.exists? "#{target}/#{File.basename(f)}"
     log("warning dst file exists: \'#{File.basename(f)}\'",2) if $config["settings"]["log_level"] > 2
     if stats["src_size"] == stats["dst_size"] and $config["settings"]["prompt_prune_duplicates"] and f != target_file
-      msg = "#{@script} -> duplicate equal size: \'#{File.basename(f) }\' remove new copy ? [y/n] "
+      msg = "duplicate: equal size \'#{File.basename(f) }\' remove new copy ? [y/n] "
       prompt(f,"delete",msg)
       return 2
     elsif stats["src_size"] != stats["dst_size"] and f != target_file
