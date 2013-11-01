@@ -185,7 +185,8 @@ if $config["settings"]["prune_empty_directories"]
   remove_empty_directories(src)
 end
 
-display_no_data
+# not working right now
+#display_no_data
 display_errors
 
 if $config["http_rpc"]["update_library"]
