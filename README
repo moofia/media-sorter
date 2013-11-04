@@ -2,10 +2,15 @@
 mac os install:
 
 Xcode
-Macports
 
+Macports :
 port install libxml2
 port install unrar
+
+Homebrew:
+
+brew install unrar
+brew install libxml2
 
 ubuntu install:
 
