@@ -519,6 +519,8 @@ end
 # removes empty directories
 def remove_empty_directories(src)
   found = false
+  clean_arb_dot_files(src) if $config["clean"]["process"] == true
+  clean_arb_named_files(src) if $config["clean"]["process"] == true
   get_directories(src).each do |dir|
     tmp_dir = dir.gsub(/\[/,'\[')
     tmp_dir.gsub!(/\]/,'\]')
@@ -540,6 +542,15 @@ def remove_empty_directories(src)
     if not Dir["#{dir}/*"].empty? and $config["settings"]["log_level"] > 1
       log("unable to remove, directory not empty: #{dir}") 
     end
+  end
+  
+  # finally clean the parent given directory
+  if Dir["#{src}/*"].empty?
+    log("cleanining up : #{src}") if not found
+    log("removing empty directory : #{src}")
+    remove_arb_dot_files(src)
+    FileUtils.rmdir(src,$options)
+    found = true
   end
   
   log("no empty directories were found") if not found and $opt["prune-empty-directories"]
