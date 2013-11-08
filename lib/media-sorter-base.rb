@@ -545,7 +545,7 @@ def remove_empty_directories(src)
   end
   
   # finally clean the parent given directory
-  if Dir["#{src}/*"].empty?
+  if Dir["#{src}/*"].empty? and src != @src
     log("cleanining up : #{src}") if not found
     log("removing empty directory : #{src}")
     remove_arb_dot_files(src)
