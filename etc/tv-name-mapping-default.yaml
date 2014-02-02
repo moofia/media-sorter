@@ -7,13 +7,16 @@
 
 rename:
   show:
+      "Chicago p.d": "Chicago p.d."
+      "Chicago P D": "Chicago p.d."
+      "The Bridge (US)": "The Bridge (2013)"
+      "Dracula (2013)": "Dracula"
       "Chicago PD": "Chicago P.D."
       "Atlantis": "Atlantis (2013)"
       "Intelligence": "Intelligence (2014)"
       "Intelligence us": "Intelligence (2014)"
       "Intelligence (us)": "Intelligence (2014)"
       "The Hero": "The Hero (2013)"      
-      "Dracula 2013": "Dracula"
       "Csi- Crime Scene Investigation": "csi crime scene investigation"
       "Jamies Money Saving Meals": "Jamie's Money Saving Meals"
       "Ncis- Los Angeles": "Ncis Los Angeles"
@@ -42,7 +45,6 @@ rename:
       "Blood and Oil 2013": "Blood and Oil"
       "Blood and Oil (2013)": "Blood and Oil"
       "Exit 2013": exit
-      "The Bridge us": "The Bridge (us)"
       "Mistresses us": "Mistresses (US)"
       "King and Maxwell": "King & Maxwell"
       "Rock My Rv With Bret Michaels": "Rock My Rv"
