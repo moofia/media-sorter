@@ -34,8 +34,8 @@ def prompt(file,action,msg)
   elsif $config["settings"]["auto_prune_duplicates"]
     @script = File.basename $0 
     msg.gsub!(/#{@script} -> /,'')
-    msg.gsub!(/remove new .*\[y\/n\]/,'autoremove occuring')
-    msg.gsub!(/remove dup .*\[y\/n\]/,'autoremove occuring')
+    msg.gsub!(/remove new .*\[y\/n\]/,'autoremove new source')
+    msg.gsub!(/remove dup .*\[y\/n\]/,'autoremove new source')
     log msg
     FileUtils.rm(file,$options) if action == "delete"
   end
@@ -316,7 +316,7 @@ def move_file(f,target)
   if File.exists? "#{target}/#{File.basename(f)}"
     log("warning dst file exists: \'#{File.basename(f)}\'",2) if $config["settings"]["log_level"] > 2
     if stats["src_size"] == stats["dst_size"] and $config["settings"]["prompt_prune_duplicates"] and f != target_file
-      msg = "#{@script} -> duplicate equal size: \'#{File.basename(f) }\' remove new copy ? [y/n] "
+      msg = "duplicate: equal size \'#{File.basename(f) }\' remove new copy ? [y/n] "
       prompt(f,"delete",msg)
       return 2
     elsif stats["src_size"] != stats["dst_size"] and f != target_file
@@ -519,6 +519,8 @@ end
 # removes empty directories
 def remove_empty_directories(src)
   found = false
+  clean_arb_dot_files(src) if $config["clean"]["process"] == true
+  clean_arb_named_files(src) if $config["clean"]["process"] == true
   get_directories(src).each do |dir|
     tmp_dir = dir.gsub(/\[/,'\[')
     tmp_dir.gsub!(/\]/,'\]')
@@ -540,6 +542,15 @@ def remove_empty_directories(src)
     if not Dir["#{dir}/*"].empty? and $config["settings"]["log_level"] > 1
       log("unable to remove, directory not empty: #{dir}") 
     end
+  end
+  
+  # finally clean the parent given directory
+  if Dir["#{src}/*"].empty? and src != @src
+    log("cleanining up : #{src}") if not found
+    log("removing empty directory : #{src}")
+    remove_arb_dot_files(src)
+    FileUtils.rmdir(src,$options)
+    found = true
   end
   
   log("no empty directories were found") if not found and $opt["prune-empty-directories"]

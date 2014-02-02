@@ -6,6 +6,7 @@ def process_movie(src)
   return if src =~ /\.nfo$/i
   return if src =~ /\/subs$/i
   return if src =~ /\.sample$/i
+  return if not File.exists? src
   if $config["movies_directory"]["process"] == true
     movie = Movie.new src    
     movie.status = handle_movie_directory movie if movie.is_movie?

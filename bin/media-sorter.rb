@@ -103,9 +103,9 @@ if File.exists? custom_config
 end
 
 begin
-  $config_rename = YAML::load(File.read("#{$script_dir}/etc/tv-name-mapping.yaml"))
+  $config_rename = YAML::load(File.read("#{$script_dir}/etc/tv-name-mapping-default.yaml"))
 rescue => e
-  puts "#{@script} -> yaml error #{e.message} in tv-name-mapping.yaml"  
+  puts "#{@script} -> yaml error #{e.message} in tv-name-mapping-default.yaml"  
   exit 2
 end
 
@@ -185,7 +185,8 @@ if $config["settings"]["prune_empty_directories"]
   remove_empty_directories(src)
 end
 
-display_no_data
+# not working right now
+#display_no_data
 display_errors
 
 if $config["http_rpc"]["update_library"]

@@ -1,0 +1,261 @@
+---
+  
+# some shows are distibuted with one name and have a realname that differs.
+# this is needed so xbmc can find the shows
+
+# dots are replaced with spaces first, if a show has a dot in the name it must be renamed by taking into account the space
+
+rename:
+  show:
+      "Chicago PD": "Chicago P.D."
+      "Atlantis": "Atlantis (2013)"
+      "Intelligence": "Intelligence (2014)"
+      "Intelligence us": "Intelligence (2014)"
+      "Intelligence (us)": "Intelligence (2014)"
+      "The Hero": "The Hero (2013)"      
+      "Dracula 2013": "Dracula"
+      "Csi- Crime Scene Investigation": "csi crime scene investigation"
+      "Jamies Money Saving Meals": "Jamie's Money Saving Meals"
+      "Ncis- Los Angeles": "Ncis Los Angeles"
+      "The Venture Bros": "The Venture Bros."
+      "Owners Manual": "Owner's Manual"
+      "Sullivan and Son": "Sullivan & Son"
+      "Played Ca": "Played"
+      "The Tomorrow People Us": "The Tomorrow People (Us)"
+      "The Tomorrow People": "The Tomorrow People (us)"
+      "The Tomorrow People 2013": "The Tomorrow People (us)"
+      "The Tomorrow People (2013)": "The Tomorrow People (us)"
+      "Atlantis 2013": "Atlantis"
+      "Brooklyn Nine Nine": "Brooklyn Nine-Nine"
+      "The Michael J Fox Show": "The Michael J. Fox Show"
+      "The Michael J  Fox Show": "The Michael J. Fox Show"
+      "Marvels Agents of SHIELD": "Marvel's Agents of S.H.I.E.L.D."
+      "Marvels Agents of S H I E L D ": "Marvel's Agents of S.H.I.E.L.D."
+      "Marvels Agent's of S H I E L D ": "Marvel's Agents of S.H.I.E.L.D."
+      "Marvels Agents of S H I E L D": "Marvel's Agents of S.H.I.E.L.D."
+      "Marvel's Agents of S H I E L D": "Marvel's Agents of S.H.I.E.L.D."
+      "Low Winter Sun": "Low Winter Sun (US)"
+      "Low Winter Sun us": "Low Winter Sun (US)"
+      "Get Out Alive 2013": "Get Out Alive with Bear Grylls"
+      "The Burrowers 2013": "The Burrowers"
+      "Cedar Cove": "Debbie Macomber's Cedar Cove"
+      "Blood and Oil 2013": "Blood and Oil"
+      "Blood and Oil (2013)": "Blood and Oil"
+      "Exit 2013": exit
+      "The Bridge us": "The Bridge (us)"
+      "Mistresses us": "Mistresses (US)"
+      "King and Maxwell": "King & Maxwell"
+      "Rock My Rv With Bret Michaels": "Rock My Rv"
+      "House of Cards": "House of Cards (US)"
+      "Overhaulin": "Overhaulin'"
+      "Da Vincis Demons": "Da Vinci's Demons"
+      "Touch": "Touch (2012)"
+      "Golden Boy": "Golden Boy (2013)"
+      "Sun Sex and Suspicious Parents": "Sun, Sex and Suspicious Parents"
+      "Zero Hour us": "Zero Hour (2013)"
+      "Zero Hour": "Zero Hour (2013)"
+      "Top Chef Seattle": "Top Chef"
+      "The Block All Stars": "The Block"
+      "The Block All Stars AU": "The Block"
+      "the block au all stars": "The Block"
+      "The Block Au Sky High": "the block"
+      "Cracked (2012)": "Cracked (2013)"
+      "Cracked": "Cracked (2013)"
+      "Masterchef Australia The Professionals": "Masterchef The Professionals Australia"
+      "Hard core Pawn": "Hardcore Pawn"
+      "George Clarkes Amazing Spaces": "George Clarke's Amazing Spaces"
+      "Mrs Browns Boys": "Mrs Brown's Boys"
+      "The Next Iron Chef Innovation": "The Next Iron Chef"
+      "The Next Iron Chef Redemption": "The Next Iron Chef"
+      "Discovery Megabuilders": "Mega Builders"
+      "Richard Hammonds Secret Service": "Richard Hammond's Secret Service"
+      "David Attenboroughs Africa": "Africa (2013)"
+      "David Attenboroughs Galapagos": "Galapagos with David Attenborough"
+      "Storage Wars NY": "Storage Wars New York"
+      "Once Upon a Time": "Once Upon a Time (2011)"
+      "Project Runway Allstars": "Project Runway All stars"
+      "Project Runway All-stars": "Project Runway All stars"
+      "Dancing With the Stars us": "Dancing With the Stars"
+      "Awkward": "Awkward."
+      "Scandal": "Scandal (2012)"
+      "Scandal us": "Scandal (2012)"
+      "Emily Owens MD": "Emily Owens, M.D."
+      "Emily Owens M D": "Emily Owens, M.D."
+      "Dont Trust the Bitch in Apartment 23": "Don't Trust the B---- in Apartment 23"
+      "Jamies Summer Food Rave Up": "Jamie's Summer Food Rave Up"
+      "Jamies 15 Minute Meals": "Jamie's 15 Minute Meals"
+      "Nashville 2012": "Nashville"
+      "The Neighbors 2012": "The Neighbors"
+      "BBC - Oceans": "Oceans"
+      "The X Factor AU": "The X Factor (AU)"      
+      "Louie": "Louie (2010)"
+      "Revolution 2012": "Revolution"
+      "The Inbetweeners US": "The Inbetweeners (US)"
+      "eXtreme Waterparks": "Xtreme Waterparks"
+      "Hamish And Andys Gap Year": "Hamish And Andy’s Gap Year"
+      "boss": "boss (2011)"
+      "Mr D": "Mr. d"
+      "castle": "Castle (2009)"
+      "Gordon Ramsay Behind Bars": "Gordon Behind Bars"
+      "masterchef au": "masterchef australia"
+      "Dragons Den uk": "Dragons' Den"
+      "Dragons Den": "Dragons' Den"
+      "Dragons Den ca": "Dragons' Den (Canada)"
+      "Dragons' Den ca": "Dragons' Den (Canada)"
+      "Dragon's Den Ca": "Dragons' Den (Canada)"
+      "The Man From U N C L E": "The Man From U.N.C.L.E."
+      "Spartacus Vengeance": "Spartacus"
+      "Are You There, Chelsea": "Are You There, Chelsea?"
+      "Are You There Chelsea": "Are You There, Chelsea?"
+      "10 O Clock Live": "10 O'Clock Live"
+      "Redemption Inc": "Redemption Inc."
+      "Are You There Chelsea": "Are You There, Chelsea?"
+      "Smash": "smash (2012)"
+      "3rd_rock_from_the_sun": "3rd rock from the sun"
+      "Cake boss Next Great Baker": "Next Great Baker"
+      "Big Shrimpin": "Big Shrimpin'"
+      "Gold Rush Alaska": "Gold Rush"
+      Last Man Standing: "Last Man Standing (2011)"
+      Last Man Standing us: "Last Man Standing (2011)"
+      "Come Fly With Me (2010)": "Come Fly With Me"
+      "Mr  Sunshine (2011)": "Mr. Sunshine (2011)"
+      "Prime Suspect Us": "Prime Suspect (US)"
+      "Charlies Angels 2011": "Charlie's Angels (2011)"
+      "Up All Night 2011": "Up All Night"
+      "CSI": "CSI Crime Scene Investigation"
+      "Crime Scene Investigation": "CSI Crime Scene Investigation"
+      "Free Agents Us": "Free Agents (Us)"
+      "The X Factor Us": "The X Factor (Us)"
+      "Man v Food Nation": "Man v. Food Nation"
+      "Man v  Food Nation": "Man v. Food Nation"
+      "Dark Matters Twisted but True": "Dark Matters"
+      aaf-deadliest catch: deadliest catch
+      "The Hour UK 2011": "The Hour (2011)"
+      "Mash": "M*A*S*H"
+      "Americas Next Top Model": "America's Next Top Model"
+      "Amazing Race Australia": "The Amazing Race Australia"
+      "LA Ink": "L.A. Ink"
+      "L A  Ink": "L.A. Ink"
+      "Wolverine (2011)": "Wolverine"
+      "Iron Man (2011)": "Iron Man (2010)"
+      "Frasier -": "Frasier"
+      Extreme Chefs: Extreme Chef
+      "Project Runway Au": Project Runway Australia
+      "Teen Wolf (2011)": Teen Wolf
+      "the block au": "The Block"
+      "Extreme Chefs": Extreme Chef
+      Project Runway Au: Project Runway Australia
+      "the block au": "the block"
+      "Wilfred US": "Wilfred (US)"
+      "Masterpiece Theater Bleak House": House
+      "Hani Hani Operation Sanctuary": Sanctuary
+      "That Mitchell & Webb Look": "That Mitchell and Webb Look"
+      The Killing: "The Killing (2011)"
+      "Spartacus - Blood and Sand": "Spartacus: Blood and Sand"
+      "frontline (us)": "frontline (pbs)"
+      "Spartacus - Gods of the Arena": "Spartacus: Gods of the Arena"
+      "Sanctuary US": "Sanctuary"
+      "Star Wars the Clone Wars (2008)": "Star Wars:  The Clone Wars"
+      "Star Wars - The Clone Wars (2008)": "Star Wars:  The Clone Wars"
+      "Star Wars the Clone Wars": "Star Wars: The Clone Wars"
+      "Star Wars - the Clone Wars": "Star Wars: The Clone Wars"
+      Sea_patrol: Sea patrol
+      "Sanctuary (US)": Sanctuary
+      "Rush (2008)": Rush
+      "Life After People - the Series": Life After People
+      Kenny vs  Spenny: "Kenny vs. Spenny"
+      Eastbound and Down: "Eastbound & Down"
+      Californation: Californication
+      ben 10 alien force: "ben 10: alien force"
+      Ben 10 Ultimate Alien: "Ben 10: Ultimate Alien"
+      aaf-tosh 0: tosh.0
+      aaf-tosh: tosh.0
+      tosh: tosh.0
+      XIII - the Series: "XIII (2011)"
+      Franklink and Bash: "Franklin & Bash"
+      Franklin and Bash: "Franklin & Bash"
+      "Teen Wolf (2011)": teen wolf
+      Richard Hammond Engineering Connections: "Richard Hammond's Engineering Connections"
+      Richard Hammonds Engineering Connections: "Richard Hammond's Engineering Connections"
+      Richards Hammond Engineering Connections: "Richard Hammond's Engineering Connections"
+      "The Amazing race au": "The Amazing Race Australia"
+      "Survivor UK": "Survivor (UK)"
+      "The Voice": "The Voice (US)"
+      "The Apprentice (UK)": The Apprentice UK
+      The Killing: "The Killing (2011)"
+      "So You Think You Can Dance (UK)": So You Think You Can Dance UK
+      King: "King (2011)"
+      Americas Next Great Restaurant: "America's Next Great Restaurant"
+      The Cape: "The Cape (2011)"
+      Rome Wasnt Built in a Day: "Rome Wasn't Built in a Day"
+      Survivor - Redemption Island: Survivor
+      Criminal Minds - Suspect Behavior: Criminal Minds Suspect Behavior
+      "Mr Sunshine 2011": "Mr. Sunshine (2011)"
+      Skins US: "Skins (US)"
+      Being Human US: "Being Human (US)"
+      Harrys Law: "Harry's Law"
+      Shameless US: "Shameless (US)"
+      Law and Order Los Angeles: "Law & Order: Los Angeles"
+      Law and Order LA: "Law & Order: Los Angeles"
+      Mike And Molly: "Mike & Molly"
+      "Hawaii Five-0 (2010)": "Hawaii Five-0"
+      "Hawaii Five-0 2010": "Hawaii Five-0"
+      "Hawaii Five-O (2010)": "hawaii five-0"
+      Its Always Sunny in Philadelphia: "It's Always Sunny in Philadelphia"
+      Detroit 187: "Detroit 1-8-7"
+      "Man Woman Wild": "Man, Woman, Wild"
+      Ramsays Best Restaurant: "Ramsay's Best Restaurant"
+      players2010: "players (2010)"
+      This Is England 86: "This Is England '86"
+      This Is England  86: "This Is England '86"
+      wipeout au: "Wipeout (AU)"
+      wipeout ca: "Wipeout (canada)"
+      "wipeout (ca)": "Wipeout (canada)"
+      The X Factor australia: "the x factor (au)"
+      The X Factor Uk: the x factor
+      "The X Factor (Uk)": the x factor
+      "Childrens' Hospital":  Childrens Hospital
+      brothers and sisters: "Brothers & Sisters"
+      Melissa and Joey: "Melissa & Joey"
+      "MasterChef US": "Masterchef (US)"
+      "The Colony US": The Colony
+      "The Colony (US)": The Colony
+      "Penn & Teller - Fool Us": "Penn & Teller: Fool Us"
+      "Penn and Teller - Fool Us": "Penn & Teller: Fool Us"
+      "Penn and Teller Bullshit": "Penn & Teller: Bullshit!"
+      "Penn & Teller - Bullshit!": "Penn & Teller: Bullshit!"
+      Rizzoli and Isles: Rizzoli & Isles
+      FOOD Ace of Cakes: Ace of Cakes
+      Hollys World: "Holly's World"
+      'Man vs  Wild': 'Man vs. Wild'
+      'Penn and Teller Bullshit!': 'Penn & Teller: Bullshit!'
+      The Office: "The Office (US)"
+      The Office US: "The Office (US)"
+      Americas Got Talent: "America's Got Talent"
+      Wipeout US: "Wipeout (US)"
+      "Hells Kitchen Uk": "Hell's Kitchen (UK)"
+      "Hells Kitchen Us": "Hell's Kitchen (US)"
+      csi new york: csi ny
+      Richard Hammonds Invisible Worlds: "Richard Hammond's Invisible Worlds"
+      'Survivor (US)': Survivor
+      'Survivor Nicaragua': Survivor
+      'Survivor US': Survivor
+      'Survivor - Heroes vs  Villains': Survivor
+      crash & burn: Cra$h & Burn
+      greys anatomy: "Grey's Anatomy"
+      csi: crime scene investigation
+      so.you.think.you.can.dance.au: So You Think You Can Dance Australia
+      v: v (2009)
+      Kitchen Nightmares (US): Kitchen Nightmares
+      Human.Target: Human Target (2010)
+      Til Death: "'Til Death"
+      # all periods are replaces with spaces from a show name orignal file name was House, M.D.
+      "House, M D": house
+      Dancing With The Stars (US): Dancing With The Stars
+      The Apprentice NZ: The Apprentice New Zealand
+      Britains Got Talent: "Britain's Got Talent"
+      Britains Got More Talent: "Britain's Got More Talent"
+      Australias Got Talent: "Australia's Got Talent"
+      Bizzare Food With Andrew Zimmern: Bizarre Foods
+      Bizarre Foods with Andrew Zimmern: Bizarre Foods
+      American Dad: American Dad!
