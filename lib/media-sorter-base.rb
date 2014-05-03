@@ -443,6 +443,7 @@ def remove_arb_dot_files(src)
   dot_files << "_.DS_Store"
   dot_files << "com.apple.timemachine.supported"
   dot_files << "Thumbs.db"
+  dot_files << "localized"
   
   dot_files.each do |file|
     dot_file_remove = "#{src}/.#{file}"
