@@ -133,8 +133,8 @@ http_rpc:
   
 clean:
   process: true
-  remove_extentions: txt,jpg,nfo,srt,png
-  remove_named: sample
+  remove_extentions: txt,jpg,nfo,srt,png,sfv
+  remove_named: sample, .localized
   
 external:
   process: false

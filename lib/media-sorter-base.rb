@@ -487,6 +487,14 @@ def clean_arb_named_files(src)
   end
 end
 
+# clean up sample directories
+def clean_arb_samples(src)
+  Find.find(src) do |path|
+    next if File.basename(path) !~ /^sample$/i
+      FileUtils.rm_r(path,$options) if File.directory? path
+    end
+end
+
 # returns a list of files
 def get_files(src)
   files = Array.new
@@ -520,6 +528,7 @@ end
 # removes empty directories
 def remove_empty_directories(src)
   found = false
+  clean_arb_samples(src) if $config["clean"]["process"] == true
   clean_arb_dot_files(src) if $config["clean"]["process"] == true
   clean_arb_named_files(src) if $config["clean"]["process"] == true
   get_directories(src).each do |dir|
