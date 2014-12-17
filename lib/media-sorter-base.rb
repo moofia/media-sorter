@@ -756,10 +756,10 @@ def setting_ok_storage_locations
 end
 
 def symlink_on_move(src, directory)
-  item = File.basename(src)
-  log_new("symlink on move -> #{File.basename(item) }") if $opt["debug"]
   if $config["settings"]["symlinked_archives"] and not $opt["dry"]
     if $config["settings"]["symlinked_archives_location"] 
+      item = File.basename(src)
+      log_new("symlink on move -> #{File.basename(item) }") if $opt["debug"]
       symlink_dir = $config["settings"]["symlinked_archives_location"]
       today = Time.new.strftime("%Y-%m-%d")
       today_dir = "#{symlink_dir}/#{today}"
