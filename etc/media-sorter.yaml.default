@@ -39,7 +39,9 @@ settings:
   # file system is case sensitive or not
   # fs_case_sensitive: true
 
-  
+  symlinked_archives: false
+  symlinked_archives_location: /tmp
+
 tvdb:
   api_key: 31384A8E0F418F3B
   mirror: http://thetvdb.com # should be changed to use the api prefered method of finding the correct mirror

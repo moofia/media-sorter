@@ -155,8 +155,6 @@ end
 # remove trailing / from bash_completion
 src = src.gsub(/\/$/,'')
 
-
-
 # prune empty directories and exit
 if $opt["prune-empty-directories"]
   remove_empty_directories(src)

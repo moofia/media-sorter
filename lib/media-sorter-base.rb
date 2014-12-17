@@ -344,7 +344,9 @@ def move_file(f,target)
     # if the directory does not exist it is created
     FileUtils.mkdir_p(target,$options) if not File.directory? target
     begin
+
     FileUtils.mv(f,target,$options) if ( (File.dirname f) != target.gsub(/\/$/,''))
+    symlink_on_move(f,target)
     rescue => e
       log("error: problem with target, reason #{e.to_s}")
       exit 1
@@ -372,6 +374,7 @@ def move_directory(directory,target)
    # if the directory does not exist it is created
    FileUtils.mkdir_p(target,$options) if not File.directory? target
    FileUtils.mv(directory,target,$options) if ( (File.dirname directory) != target.gsub(/\/$/,'')) 
+   symlink_on_move(directory,target)
  end
 end
 
@@ -750,4 +753,22 @@ def setting_ok_storage_locations
     exit
   end
   return status
+end
+
+def symlink_on_move(src, directory)
+  item = File.basename(src)
+  log_new("symlink on move -> #{File.basename(item) }") if $opt["debug"]
+  if $config["settings"]["symlinked_archives"] and not $opt["dry"]
+    if $config["settings"]["symlinked_archives_location"] 
+      symlink_dir = $config["settings"]["symlinked_archives_location"]
+      today = Time.new.strftime("%Y-%m-%d")
+      today_dir = "#{symlink_dir}/#{today}"
+      link = "#{symlink_dir}/#{today}/#{item}"
+      src = "#{directory}/#{item}"
+
+      FileUtils.mkdir_p(symlink_dir) if not File.directory? symlink_dir
+      FileUtils.mkdir_p(today_dir) if not File.directory? today_dir
+      FileUtils.ln_s src, link if not File.exist? link 
+    end
+  end
 end
