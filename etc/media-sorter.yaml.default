@@ -137,7 +137,7 @@ http_rpc:
 clean:
   process: true
   remove_extentions: txt,jpg,nfo,srt,png,sfv
-  remove_named: sample, .localized
+  remove_named: sample,.localized,RARBG.COM
   
 external:
   process: false

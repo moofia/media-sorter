@@ -453,8 +453,13 @@ def remove_arb_dot_files(src)
     FileUtils.rm(dot_file_remove,$options) if File.exists? dot_file_remove
   end
 
+  #Find.find('/media/slot2/sort/3g') do |a|
+  #  puts a
+  #end
+  #
   # handle removing of temp macos ._ files
   Find.find(src) do |path|
+    #puts File.basename(path)
     next if File.basename(path) !~ /^\._/
     dot_file_remove = "#{src}/#{File.basename(path)}"
     FileUtils.rm(dot_file_remove,$options) if File.exists? dot_file_remove
@@ -478,6 +483,7 @@ end
 
 # clean up unwanted files that get in the way based on name
 def clean_arb_named_files(src)
+
   clean_list = $config["clean"]["remove_named"].split(/,/)
 
   Find.find(src) do |path|
