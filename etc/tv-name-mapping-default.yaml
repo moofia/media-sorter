@@ -7,6 +7,7 @@
 
 rename:
   show:
+      "Dragons Den ca": "Dragons' Den (CA)"
       "The Returned us": "The Returned (us)"
       "Nashville": "Nashville (2012)"
       "Secrets and Lies us": "Secrets and Lies (us)"
@@ -155,9 +156,6 @@ rename:
       "masterchef au": "masterchef australia"
       "Dragons Den uk": "Dragons' Den"
       "Dragons Den": "Dragons' Den"
-      "Dragons Den ca": "Dragons' Den (Canada)"
-      "Dragons' Den ca": "Dragons' Den (Canada)"
-      "Dragon's Den Ca": "Dragons' Den (Canada)"
       "The Man From U N C L E": "The Man From U.N.C.L.E."
       "Spartacus Vengeance": "Spartacus"
       "Are You There, Chelsea": "Are You There, Chelsea?"
