@@ -96,26 +96,25 @@ def handle_rar(rar)
     ext_list = $config["series"]["media_extentions"].gsub(/,/,"|")
     
     episode_status, episode_name, episode_season, episode_episode = tv_file(File.basename(directory) + ".avi")
+
     if episode_status
       unrar_list = %x[unrar l #{rar}]
       count = 0
       unrar_list_file = ""
-      #unrar_list.each do |line|
       unrar_list.split(/\n/).each do |line|
-        if line =~ /(.*)(#{ext_list})\s+\d+\w\d+/
+        if line =~ /(.*)(#{ext_list})\s+\d+\w\d+/ or line =~ /(.*)(#{ext_list})$/
           count = count + 1
           unrar_list_file = line
         end
       unrar_list_file = "" if count > 1  
       end
-      
-      if unrar_list_file =~ /(.*)(#{ext_list})\s+\d+\w\d+/
+
+      if unrar_list_file =~ /(.*)(#{ext_list})\s+\d+\w\d+/ or unrar_list_file =~ /\s\d+:\d+\s+(.*)(#{ext_list})$/
         name = $1
         ext = $2
         if name =~ /\w+/ and ext =~ /#{ext_list}/
           target_file = name.gsub(/^\s+/,'') + ext
           media_file = directory + "/" + target_file
-      
           episode_status, episode_name, episode_season, episode_episode = tv_file(target_file) if $config["series"]["process"] == true
           if episode_status and not File.exist? media_file
             command = "#{$config["settings"]["unrar_location"]} e #{rar} #{directory}"
