@@ -110,6 +110,7 @@ movies_directory:
     - (.*)(\s|\.)XViD(\s|\.).*R5                # Movie.XViD R5-fOBaR  
     - (.*)(\s|\.)PPVRip(\s|\.).*(XviD|x264)?    # Movie.PPVRip.XviD-fOBaR  
     - (.*)(\s|\.)DVDSCR                         # Movie.DVDSCR-fOBaR  
+    - (.*)(\s|\.)720p.WEB-DL                    # Movie.720p.WEB-DL
     - (.*)(\s|\.)R5                             # Movie.R5-fOBaR  
     - (.*)(\s|\.)HDDVDRip                       # Movie.HDDVDRip-fOBaR  
     - (.*)(\s|\.|\]|\[|\()DVDRip                # Movie.UNRATED.RERIP.DVDRip.XviD-fOBaR  
@@ -136,7 +137,7 @@ http_rpc:
   
 clean:
   process: true
-  remove_extentions: txt,jpg,nfo,srt,png,sfv
+  remove_extentions: txt,jpg,nfo,srt,png,sfv,lnk
   remove_named: sample,.localized,RARBG.COM
   
 external:
