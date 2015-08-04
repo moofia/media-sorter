@@ -7,11 +7,13 @@
 
 rename:
   show:
+      "Scream The TV Series": "Scream"
+      "Ballers 2014": "Ballers"
       "Proof": "Proof (2015)"
       "Proof us": "Proof (2015)"
       "Aquarius": "Aquarius (2015)"
       "Aquarius us": "Aquarius (2015)"
-      "Mr Robot": "Mr. Robot"
+      "Mr  Robot": "Mr. Robot"
       "Master Chef Us": "MasterChef (Us)"
       "Youre the Worst 2014": "You're the Worst"
       "Youre the Worst": "You're the Worst"
@@ -26,7 +28,8 @@ rename:
       "Shark Tank AU": "Shark Tank (AU)"
       "The Block Triple Threat": "The Block"
       "The slap US": "The slap (US)"
-      "The Voice US": "The Voice (US)"
+      "The Voice (US)": "The Voice "
+      "The Voice US": "The Voice "
       "Marvels Agent Carter": "Marvel's Agent Carter"
       "Schitts Creek": "Schitt's Creek"
       "Marry Me 2014": "Marry Me"
@@ -47,6 +50,7 @@ rename:
       "power (2014)": "power"
       "Reckless us": "Reckless (2014)"
       "Kodiak": "Kodiak (2014)"
+      "House Rules au": "House Rules (AU)"
       "House Rules": "House Rules (AU)"
       "So You Think You Can Dance us": "So You Think You Can Dance"
       "Star Crossed": "Star-Crossed"
