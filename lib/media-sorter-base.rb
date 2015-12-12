@@ -319,9 +319,17 @@ def move_file(f,target)
       prompt(f,"delete",msg)
       return 2
     elsif stats["src_size"] != stats["dst_size"] and f != target_file
-      msg = "duplicate: src \'#{f}\' (#{stats["src_size"]}) -> dst \'#{target_file}\' (#{stats["dst_size"]}) fix manually"
-      #prompt(f,"delete",msg)
-      log msg
+
+      if $config["settings"]["prune_duplicates_choose_larger"]
+        if stats["src_size"] > stats["dst_size"]
+          msg = "duplicate: src larger than current, removing the current #{target_file}"
+          prompt(target_file,"delete",msg)
+        end
+      else
+        msg = "duplicate: src \'#{f}\' (#{stats["src_size"]}) -> dst \'#{target_file}\' (#{stats["dst_size"]}) fix manually"
+        log msg
+      end
+
     else
       log "warning src and dst equal for '#{File.basename(f)}\' with auto pruning enabled we choose to do nothing"
     end

@@ -24,6 +24,7 @@ settings:
   prompt_move_movie: false
   
   prompt_prune_duplicates: true
+  prune_duplicates_choose_larger: false
   # auto pruning of duplicates, new src is always removed.
   # currently equal size and < 100M and zero bytes
   auto_prune_duplicates: true
@@ -83,6 +84,7 @@ series:
     - (.*)\s\[(\d+)x(\d+)\_(\d+)\]\s           # Tv Show [6x16_17] episode.avi
     - (.*)\ss(\d+)e(\d)+\s                     # Tv Show S01E01 episode.avi
     - (.*)\.(s+\d+)e(\d+)-e\d+\..*             # Show.S10E17-E18.episode.avi
+    - (.*)\.(s+\d+)e(\d+)e\d+\..*              # Show.S01E11E12.episode.avi
     - (.*)\.(\d)(\d\d)\..*                     # tv.show.114.avi
     - (.*)\.(\d\d)(\d\d)\..*                   # tv.show.1114.avi
     - (.*)\-\s(\d)(\d\d)\s\-.*                 # tv.show - 114 - foo.avi
