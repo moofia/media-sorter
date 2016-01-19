@@ -86,7 +86,7 @@ series:
     - (.*)\.(s+\d+)e(\d+)-e\d+\..*             # Show.S10E17-E18.episode.avi
     - (.*)\.(s+\d+)e(\d+)e\d+\..*              # Show.S01E11E12.episode.avi
     - (.*)\.(\d)(\d\d)\..*                     # tv.show.114.avi
-    - (.*)\.(\d\d)(\d\d)\..*                   # tv.show.1114.avi
+#    - (.*)\.(\d\d)(\d\d)\..*                   # tv.show.1114.avi
     - (.*)\-\s(\d)(\d\d)\s\-.*                 # tv.show - 114 - foo.avi
     - (.*)\s-\s(\d+)x(\d+)\s-\s                # Tv Show - 07x01 - episode.avi
     - (.*)\s-\s(\d+)x(\d+)-\d+\s-\s            # Tv Show - 07x01-02 - episode.avi
