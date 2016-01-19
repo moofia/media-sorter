@@ -82,6 +82,8 @@ series:
     - (.*)\s\[(\d+)x(\d+)\-(\d+)\]\s           # Tv Show [6x16-17] episode.avi
     - (.*)\s\[(\d+)x(\d+)\.(\d+)\]\s           # Tv Show [6x16.17] episode.avi
     - (.*)\s\[(\d+)x(\d+)\_(\d+)\]\s           # Tv Show [6x16_17] episode.avi
+    - (.*)\s-\ss(\d+)e(\d+)\s                  # Tv Show - S07E01 episode.avi
+    - (.*)\s-\ss(\d+)e(\d+)                    # Tv Show - S07E01.avi
     - (.*)\ss(\d+)e(\d)+\s                     # Tv Show S01E01 episode.avi
     - (.*)\.(s+\d+)e(\d+)-e\d+\..*             # Show.S10E17-E18.episode.avi
     - (.*)\.(s+\d+)e(\d+)e\d+\..*              # Show.S01E11E12.episode.avi
