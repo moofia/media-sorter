@@ -325,6 +325,10 @@ def move_file(f,target)
           msg = "duplicate: src larger than current, removing the current #{target_file}"
           prompt(target_file,"delete",msg)
         end
+        if stats["src_size"] < stats["dst_size"]
+          msg = "duplicate: src smaller than current, removing the current #{target_file}"
+          prompt(target_file,"delete",msg)
+        end
       else
         msg = "duplicate: src \'#{f}\' (#{stats["src_size"]}) -> dst \'#{target_file}\' (#{stats["dst_size"]}) fix manually"
         log msg
