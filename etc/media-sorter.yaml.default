@@ -66,7 +66,7 @@ themoviedb:
 series:
   process: true
   media_extentions: avi,mkv,mpg,ogg,mpeg,mp4,m4v
-  duplicate_priority: mp4,avi,mkv,m4v,mpg
+  duplicate_priority: mkv,mp4,avi,m4v,mpg
   regex:
     - (.*)\.s(\d+)e(\d+)e(\d+)                 # Tv.Show.S13E01E02.avi  
     - (.*)\s-\s(\d+)x(\d+)\s-\s                # Tv Show - 1x13 - episode.avi
