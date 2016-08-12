@@ -24,7 +24,7 @@ settings:
   prompt_move_movie: false
   
   prompt_prune_duplicates: true
-  prune_duplicates_choose_larger: false
+  prune_duplicates_choose_larger: true
   # auto pruning of duplicates, new src is always removed.
   # currently equal size and < 100M and zero bytes
   auto_prune_duplicates: true
