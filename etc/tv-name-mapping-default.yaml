@@ -7,6 +7,11 @@
 
 rename:
   show:
+      "zapped": "zapped!"
+      "Hooten and the Lady": "Hooten & the Lady"
+      "The Bachelorette Australia": "The Bachelorette au"
+      "Survivor (au)": "Australian Survivor"
+      "Survivor au": "Australian Survivor"
       "Notorious": "Notorious (2016)"
       "Conviction": "Conviction (2016)"
       "The Bachelorette au": "The Bachelorette (au)"
